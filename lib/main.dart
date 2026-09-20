@@ -1,6 +1,13 @@
+import 'package:barberhub/features/login/controllers/login_controller.dart';
+import 'package:barberhub/features/login/pages/login_page.dart';
+import 'package:barberhub/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await WakelockPlus.enable();
   runApp(const MainApp());
 }
 
@@ -9,12 +16,20 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) {
+            return LoginController();
+          },
         ),
-      ),
+      ],
+      builder: (context, child) {
+        return MaterialApp(
+          routes: AppRoutes.routes,
+          initialRoute: LoginPage.route,
+        );
+      },
     );
   }
 }
