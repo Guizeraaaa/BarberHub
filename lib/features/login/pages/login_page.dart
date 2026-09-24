@@ -15,13 +15,6 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.black,
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            print('uWu');
-            // pensar se vale a pena deixar um menu hamburguer na tela de login
-          },
-          icon: Icon(Icons.menu, color: AppColors.white),
-        ),
         backgroundColor: AppColors.black,
         centerTitle: true,
         title: Text(
@@ -89,7 +82,7 @@ class LoginPage extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
-                            // vai pra home page
+                            loginController.loginButtonPressed(context);
                           },
                           child: Text(
                             'Login',
@@ -108,6 +101,7 @@ class LoginPage extends StatelessWidget {
                             ),
                           ),
                           onPressed: () {
+                            print('abrir pagina de cadastro');
                             // vai pra signUp page
                           },
                           child: Text(

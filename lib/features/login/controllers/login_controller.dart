@@ -1,7 +1,7 @@
 import 'package:barberhub/shared/mocks/mock_json.dart';
-// import 'package:barberhub/shared/models/User.dart';
-// import 'package:barberhub/shared/models/client.dart';
 import 'package:flutter/material.dart';
+
+enum UserType { client, barber }
 
 class LoginController extends ChangeNotifier {
   final int _passwordMinimumLength = 6;
@@ -17,21 +17,35 @@ class LoginController extends ChangeNotifier {
   bool get isEmailValid => _emailRegex.hasMatch(emailController.text);
 
   UserType? login() {
-    final email = emailController.text;
-    final password = passwordController.text;
-
-    final client = mockClients.firstWhere(
-      (user) => user.email == email && user.password == password,
-    );
-    if (mockClients.isNotEmpty) {
-      return UserType.client;
+    for (final client in mockClients) {
+      if (client.email == emailController.text &&
+          client.password == passwordController.text) {
+        return UserType.client;
+      }
     }
+    for (final barber in mockBarbers) {
+      if (barber.email == emailController.text &&
+          barber.password == passwordController.text) {
+        return UserType.barber;
+      }
+    }
+    return null;
+  }
 
-    final barber = mockBarbers.firstWhere(
-      (user) => user.email == email && user.password == password,
-    );
-    if (mockBarbers.isNotEmpty) {
-      return UserType.barber;
+  void loginButtonPressed(BuildContext context) {
+    if (key.currentState!.validate()) {
+      final userType = login();
+      if (userType == UserType.client) {
+        // Navigator.pushNamed(context, '/home');
+        print('vai pra home page');
+      } else if (userType == UserType.barber) {
+        // Navigator.pushNamed(context, '/dashboard');
+        print('vai pra dashboard page');
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('E-mail ou senha incorretos')));
+      }
     }
   }
 
@@ -49,5 +63,3 @@ class LoginController extends ChangeNotifier {
     return 'Senha invalida';
   }
 }
-
-enum UserType { client, barber }
