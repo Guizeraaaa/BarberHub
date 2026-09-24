@@ -6,10 +6,24 @@ import 'package:barberhub/shared/models/Appointment.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AppointmentPage extends StatelessWidget {
+class AppointmentPage extends StatefulWidget {
   const AppointmentPage({super.key});
 
   static String route = '/appointment';
+
+  @override
+  State<AppointmentPage> createState() => _AppointmentPageState();
+}
+
+class _AppointmentPageState extends State<AppointmentPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<AppointmentController>().getAppointment();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +44,15 @@ class AppointmentPage extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
-                  AppointmentCard(
-                    appointment: appointmentController.appointmentList[1],
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: appointmentController.appointmentList.length,
+                      itemBuilder: (context, index) {
+                        Appointment appointment =
+                            appointmentController.appointmentList[index];
+                        return AppointmentCard(appointment: appointment);
+                      },
+                    ),
                   ),
                 ],
               ),
