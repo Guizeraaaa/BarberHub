@@ -4,6 +4,7 @@ import 'package:barberhub/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'package:barberhub/features/scheduling/pages/scheduling_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +28,7 @@ class MainApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           routes: AppRoutes.routes,
-          initialRoute: LoginPage.route,
+          initialRoute: SchedulingPage.route,
         );
       },
     );
