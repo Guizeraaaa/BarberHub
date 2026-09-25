@@ -11,11 +11,13 @@ class AppFilterDialog<T> extends StatelessWidget {
     super.key,
     required this.selectedStatusList,
     required this.onChipChanged,
+    required this.updateFilters,
   });
 
   final List<AppointmentStatus> selectedStatusList;
 
   final Function(AppointmentStatus value) onChipChanged;
+  final VoidCallback updateFilters;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +110,15 @@ class AppFilterDialog<T> extends StatelessWidget {
                             ),
                           ),
                         ),
+                      ),
+
+                      ElevatedButton(
+                        style: ButtonStyle(),
+                        onPressed: () {
+                          updateFilters();
+                          Navigator.pop(context);
+                        },
+                        child: Text('Aplicar Filtros'),
                       ),
                     ],
                   ),

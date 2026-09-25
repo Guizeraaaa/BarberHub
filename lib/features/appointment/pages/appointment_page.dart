@@ -3,8 +3,6 @@ import 'package:barberhub/features/appointment/widgets/appointment_card.dart';
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
 import 'package:barberhub/shared/models/Appointment.dart';
-import 'package:barberhub/shared/utils.dart';
-import 'package:barberhub/shared/widgets/app_filter_chip_status.dart';
 import 'package:barberhub/shared/widgets/app_filter_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -52,6 +50,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
                           },
                           selectedStatusList:
                               appointmentController.selectedStatusList,
+                          updateFilters: () {
+                            appointmentController.updateFilters();
+                          },
                         ),
                   );
                 },

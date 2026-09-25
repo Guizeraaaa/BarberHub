@@ -26,7 +26,7 @@ class AppFilterChipStatus extends StatelessWidget {
           color: isSelected == true ? AppColors.black : AppColors.white,
           borderRadius: BorderRadius.circular(100),
           border: !isSelected
-              ? Border.all(color: AppColors.grey, width: 1.5)
+              ? Border.all(color: AppColors.greyLight, width: 1.5)
               : null,
         ),
         child: Text(

@@ -9,6 +9,7 @@ class AppointmentController extends ChangeNotifier {
   List<AppointmentStatus> selectedStatusList = [
     AppointmentStatus.agendado,
     AppointmentStatus.cancelado,
+    AppointmentStatus.concluido,
   ];
 
   String currentUserId = 'u2';
@@ -29,9 +30,15 @@ class AppointmentController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateFilters() {
+    getAppointment();
+    notifyListeners();
+  }
+
   void getAppointment() {
     appointmentList = mockAppointments.where((item) {
-      return item.clientId == currentUserId;
+      return item.clientId == currentUserId &&
+          selectedStatusList.contains(item.status);
     }).toList();
 
     appointmentList.sort((a, b) {
