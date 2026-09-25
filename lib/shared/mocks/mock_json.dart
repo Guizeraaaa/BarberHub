@@ -92,142 +92,132 @@ final List<Client> mockClients = [
   ),
 ];
 
-// ========== APPOINTMENTS ==========
-// Monta uma data relativa a hoje: _dayAt(-1, 16, 0) = ontem às 16:00.
-// Assim os mocks sempre têm passado, hoje e futuro, em qualquer dia que o app rodar.
+// ========== DATE HELPER ==========
+// _dayAt(-1, 16, 0) = ontem às 16:00.
+// Assim os mocks sempre terão passado, hoje e futuro,
+// independentemente do dia em que o app for executado.
+
 DateTime _dayAt(int daysFromToday, int hour, int minute) {
   final now = DateTime.now();
+
   return DateTime(now.year, now.month, now.day + daysFromToday, hour, minute);
 }
 
+// ========== APPOINTMENTS ==========
 final List<Appointment> mockAppointments = [
   // ---------- Passado ----------
   Appointment(
     id: 'a1',
     clientId: 'u1',
-    barberId: 'b1',
-    serviceId: 's1',
+    barber: mockBarbers[0],
+    service: mockServices[0],
     dateTime: _dayAt(-3, 10, 0),
     status: AppointmentStatus.concluido,
-    price: 45.0,
-    durationMinutes: 30,
   ),
+
   Appointment(
     id: 'a2',
     clientId: 'u2',
-    barberId: 'b2',
-    serviceId: 's2',
+    barber: mockBarbers[1],
+    service: mockServices[1],
     dateTime: _dayAt(-3, 14, 30),
     status: AppointmentStatus.concluido,
-    price: 35.0,
-    durationMinutes: 30,
   ),
+
   Appointment(
     id: 'a3',
     clientId: 'u3',
-    barberId: 'b3',
-    serviceId: 's3',
+    barber: mockBarbers[2],
+    service: mockServices[2],
     dateTime: _dayAt(-2, 9, 0),
     status: AppointmentStatus.cancelado,
-    price: 70.0,
-    durationMinutes: 60,
   ),
+
   Appointment(
     id: 'a4',
     clientId: 'u5',
-    barberId: 'b2',
-    serviceId: 's4',
+    barber: mockBarbers[1],
+    service: mockServices[3],
     dateTime: _dayAt(-1, 11, 0),
     status: AppointmentStatus.concluido,
-    price: 20.0,
-    durationMinutes: 15,
   ),
-  // Passado e ainda "agendado": serve para testar o bloqueio de edição.
+
+  // Passado e ainda "agendado":
+  // serve para testar o bloqueio de edição.
   Appointment(
     id: 'a5',
     clientId: 'u4',
-    barberId: 'b1',
-    serviceId: 's1',
+    barber: mockBarbers[0],
+    service: mockServices[0],
     dateTime: _dayAt(-1, 16, 0),
     status: AppointmentStatus.agendado,
-    price: 45.0,
-    durationMinutes: 30,
   ),
 
   // ---------- Hoje ----------
   Appointment(
     id: 'a6',
     clientId: 'u6',
-    barberId: 'b1',
-    serviceId: 's1',
+    barber: mockBarbers[0],
+    service: mockServices[0],
     dateTime: _dayAt(0, 17, 0),
     status: AppointmentStatus.agendado,
-    price: 45.0,
-    durationMinutes: 30,
   ),
+
   Appointment(
     id: 'a7',
     clientId: 'u2',
-    barberId: 'b2',
-    serviceId: 's3',
+    barber: mockBarbers[1],
+    service: mockServices[2],
     dateTime: _dayAt(0, 17, 30),
     status: AppointmentStatus.agendado,
-    price: 70.0,
-    durationMinutes: 60,
   ),
 
   // ---------- Futuro ----------
-  // a8 e a9: mesmo horário, barbeiros diferentes -> válido.
-  // Teste de conflito: tentar criar outro com o Carlos (b1) amanhã às 10:00.
+  // Mesmo horário, barbeiros diferentes -> válido.
   Appointment(
     id: 'a8',
     clientId: 'u3',
-    barberId: 'b1',
-    serviceId: 's1',
+    barber: mockBarbers[0],
+    service: mockServices[0],
     dateTime: _dayAt(1, 10, 0),
     status: AppointmentStatus.agendado,
-    price: 45.0,
-    durationMinutes: 30,
   ),
+
   Appointment(
     id: 'a9',
     clientId: 'u4',
-    barberId: 'b2',
-    serviceId: 's2',
+    barber: mockBarbers[1],
+    service: mockServices[1],
     dateTime: _dayAt(1, 10, 0),
     status: AppointmentStatus.agendado,
-    price: 35.0,
-    durationMinutes: 30,
   ),
+
   Appointment(
     id: 'a10',
     clientId: 'u5',
-    barberId: 'b3',
-    serviceId: 's1',
+    barber: mockBarbers[2],
+    service: mockServices[0],
     dateTime: _dayAt(2, 15, 0),
     status: AppointmentStatus.agendado,
-    price: 45.0,
-    durationMinutes: 30,
   ),
-  // Cancelado no futuro: não deve aparecer em "próximos agendamentos".
+
+  // Cancelado no futuro:
+  // não deve aparecer em "próximos agendamentos".
   Appointment(
     id: 'a11',
     clientId: 'u1',
-    barberId: 'b1',
-    serviceId: 's5',
+    barber: mockBarbers[0],
+    service: mockServices[4],
     dateTime: _dayAt(3, 9, 30),
     status: AppointmentStatus.cancelado,
-    price: 15.0,
-    durationMinutes: 15,
   ),
+
   Appointment(
     id: 'a12',
     clientId: 'u6',
-    barberId: 'b1',
-    serviceId: 's3',
+    barber: mockBarbers[0],
+    service: mockServices[2],
     dateTime: _dayAt(5, 14, 0),
     status: AppointmentStatus.agendado,
-    price: 70.0,
-    durationMinutes: 60,
   ),
 ];
