@@ -12,7 +12,7 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Teste',
+          'BarberHub',
           style: AppTextStyle.tittle.copyWith(color: AppColors.grey),
         ),
       ),
