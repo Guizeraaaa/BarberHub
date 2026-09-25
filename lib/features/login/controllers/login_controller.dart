@@ -1,3 +1,4 @@
+import 'package:barberhub/features/home/pages/home_page.dart';
 import 'package:barberhub/shared/mocks/mock_json.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +37,7 @@ class LoginController extends ChangeNotifier {
     if (key.currentState!.validate()) {
       final userType = login();
       if (userType == UserType.client) {
-        // Navigator.pushNamed(context, '/home');
+        Navigator.pushNamed(context, HomePage.route);
         print('vai pra home page');
       } else if (userType == UserType.barber) {
         // Navigator.pushNamed(context, '/dashboard');

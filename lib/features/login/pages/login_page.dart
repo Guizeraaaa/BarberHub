@@ -1,6 +1,7 @@
 import 'package:barberhub/features/login/controllers/login_controller.dart';
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_field.dart';
+import 'package:barberhub/shared/app_text_style.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,7 @@ class LoginPage extends StatelessWidget {
         centerTitle: true,
         title: Text(
           'Login',
-          style: TextStyle(color: AppColors.white, fontSize: 24),
+          style: AppTextStyle.tittle.copyWith(color: AppColors.white),
         ),
       ),
       body: Consumer<LoginController>(
