@@ -1,6 +1,6 @@
 name: barberhub
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0+1
 
 environment:
@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  intl: ^0.20.3
   provider: ^6.1.5+1
   wakelock_plus: ^1.8.0
 
@@ -19,3 +20,54 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/
+
+  fonts:
+    - family: Barlow
+      fonts:
+        - asset: assets/fonts/Barlow-Regular.ttf
+        - asset: assets/fonts/Barlow-Italic.ttf
+          style: italic
+
+        - asset: assets/fonts/Barlow-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Barlow-ThinItalic.ttf
+          weight: 100
+          style: italic
+
+        - asset: assets/fonts/Barlow-ExtraLight.ttf
+          weight: 200
+
+        - asset: assets/fonts/Barlow-LightItalic.ttf
+          weight: 300
+          style: italic
+
+        - asset: assets/fonts/Barlow-MediumItalic.ttf
+          weight: 500
+          style: italic
+
+        - asset: assets/fonts/Barlow-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Barlow-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+
+        - asset: assets/fonts/Barlow-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Barlow-BoldItalic.ttf
+          weight: 700
+          style: italic
+
+        - asset: assets/fonts/Barlow-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Barlow-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+
+        - asset: assets/fonts/Barlow-Black.ttf
+          weight: 900
+        - asset: assets/fonts/Barlow-BlackItalic.ttf
+          weight: 900
+          style: italic
