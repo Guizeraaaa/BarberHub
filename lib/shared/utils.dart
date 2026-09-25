@@ -1,3 +1,4 @@
+import 'package:barberhub/shared/models/Appointment.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
@@ -28,5 +29,13 @@ class Utils {
 
     return '$hours ${hours == 1 ? 'hora' : 'horas'} e '
         '$remainingMinutes ${remainingMinutes == 1 ? 'minuto' : 'minutos'}';
+  }
+
+  static String formatAppointmentStatus(AppointmentStatus status) {
+    return switch (status) {
+      AppointmentStatus.agendado => 'Agendado',
+      AppointmentStatus.cancelado => 'Cancelado',
+      AppointmentStatus.concluido => 'Finalizado',
+    };
   }
 }
