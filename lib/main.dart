@@ -28,7 +28,7 @@ class MainApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           routes: AppRoutes.routes,
-          initialRoute: SchedulingPage.route,
+          initialRoute: SchedulePage.route,
         );
       },
     );
