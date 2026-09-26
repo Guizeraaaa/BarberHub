@@ -151,10 +151,7 @@ class AppointmentCard extends StatelessWidget {
                 type == CardType.scheduled
                     ? IconButton(
                         onPressed: () {},
-                        icon: Icon(
-                          Icons.edit_outlined,
-                          color: AppColors.orangeLigth,
-                        ),
+                        icon: Icon(Icons.delete, color: AppColors.orangeLigth),
                       )
                     : SizedBox.shrink(),
               ],

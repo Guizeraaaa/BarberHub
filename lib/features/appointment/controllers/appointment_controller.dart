@@ -1,5 +1,6 @@
 import 'package:barberhub/shared/mocks/mock_json.dart';
 import 'package:barberhub/shared/models/Appointment.dart';
+import 'package:barberhub/shared/models/barber.dart';
 import 'package:barberhub/shared/models/service.dart';
 import 'package:flutter/material.dart';
 
@@ -11,14 +12,19 @@ class AppointmentController extends ChangeNotifier {
     AppointmentStatus.cancelado,
     AppointmentStatus.concluido,
   ];
+  List<Barber> professionalsList = mockBarbers;
 
   String currentUserId = 'u2';
+
+  String selectedProfessional = '';
+
+  void changeSelectedProfessional(String value) {
+    selectedProfessional = value;
+  }
   // DateTime? selectedIntialDate = DateTime(2026);
   // DateTime? selectedFinalDate = DateTime(2027);
   // String? selectedStatus = 'Agendado';
   // String? selectedProfessional = 'a1';
-
-  // bool isChipSelected = true;
 
   void changeSelectedChip(AppointmentStatus status) {
     if (selectedStatusList.contains(status)) {
@@ -30,6 +36,18 @@ class AppointmentController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearFilters() {
+    selectedStatusList = [
+      AppointmentStatus.agendado,
+      AppointmentStatus.cancelado,
+      AppointmentStatus.concluido,
+    ];
+    selectedProfessional = '';
+
+    getAppointment();
+    notifyListeners();
+  }
+
   void updateFilters() {
     getAppointment();
     notifyListeners();
@@ -38,7 +56,9 @@ class AppointmentController extends ChangeNotifier {
   void getAppointment() {
     appointmentList = mockAppointments.where((item) {
       return item.clientId == currentUserId &&
-          selectedStatusList.contains(item.status);
+          selectedStatusList.contains(item.status) &&
+          (selectedProfessional == '' ||
+              item.barber.name == selectedProfessional);
     }).toList();
 
     appointmentList.sort((a, b) {

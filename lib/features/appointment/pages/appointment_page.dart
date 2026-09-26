@@ -53,6 +53,18 @@ class _AppointmentPageState extends State<AppointmentPage> {
                           updateFilters: () {
                             appointmentController.updateFilters();
                           },
+                          professionalsList:
+                              appointmentController.professionalsList,
+                          selectedProfessional:
+                              appointmentController.selectedProfessional,
+                          changeSelectedProfessional: (value) {
+                            appointmentController.changeSelectedProfessional(
+                              value ?? '',
+                            );
+                          },
+                          clearFilters: () {
+                            appointmentController.clearFilters();
+                          },
                         ),
                   );
                 },
