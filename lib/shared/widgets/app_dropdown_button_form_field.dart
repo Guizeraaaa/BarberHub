@@ -1,19 +1,20 @@
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
-import 'package:barberhub/shared/models/barber.dart';
 import 'package:flutter/material.dart';
 
-class AppDropdownButtonFormField extends StatelessWidget {
+class AppDropdownButtonFormField<T> extends StatelessWidget {
   const AppDropdownButtonFormField({
     super.key,
     required this.selectedItem,
     required this.items,
     required this.onChanged,
+    required this.nameOf,
   });
 
   final String selectedItem;
-  final List<Barber> items;
-  final Function(String?) onChanged;
+  final List<T> items;
+  final String Function(T) nameOf;
+  final ValueChanged<String?> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -44,17 +45,18 @@ class AppDropdownButtonFormField extends StatelessWidget {
             ),
           ),
         ),
-        ...items.map(
-          (item) => DropdownMenuItem(
-            value: item.name,
+        ...items.map((item) {
+          final name = nameOf(item);
+          return DropdownMenuItem(
+            value: name,
             child: Text(
-              item.name,
+              name,
               style: AppTextStyle.subTittle.copyWith(
                 fontWeight: FontWeight.normal,
               ),
             ),
-          ),
-        ),
+          );
+        }),
       ],
       onChanged: onChanged,
     );

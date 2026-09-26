@@ -65,6 +65,15 @@ class _AppointmentPageState extends State<AppointmentPage> {
                           clearFilters: () {
                             appointmentController.clearFilters();
                           },
+                          servicesList: appointmentController.servicesList,
+                          selectedService:
+                              appointmentController.selectedService,
+                          changeSelectedService: (value) {
+                            appointmentController.changeSelectedService(
+                              value ?? '',
+                            );
+                          },
+                          exitFilters: appointmentController.clearFilters,
                         ),
                   );
                 },

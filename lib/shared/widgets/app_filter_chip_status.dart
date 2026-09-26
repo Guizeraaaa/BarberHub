@@ -21,7 +21,7 @@ class AppFilterChipStatus extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         width: 100,
-        height: 30,
+        height: 42,
         decoration: BoxDecoration(
           color: isSelected == true ? AppColors.black : AppColors.white,
           borderRadius: BorderRadius.circular(50),
@@ -32,6 +32,9 @@ class AppFilterChipStatus extends StatelessWidget {
         child: Text(
           label,
           style: AppTextStyle.label.copyWith(
+            fontWeight: isSelected == true
+                ? FontWeight.bold
+                : FontWeight.normal,
             color: isSelected == true ? AppColors.white : AppColors.black,
           ),
         ),

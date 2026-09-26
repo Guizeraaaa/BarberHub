@@ -6,25 +6,29 @@ import 'package:flutter/material.dart';
 
 class AppointmentController extends ChangeNotifier {
   List<Appointment> appointmentList = [];
-  List<Service> serviceList = [];
   List<AppointmentStatus> selectedStatusList = [
     AppointmentStatus.agendado,
     AppointmentStatus.cancelado,
     AppointmentStatus.concluido,
   ];
   List<Barber> professionalsList = mockBarbers;
+  List<Service> servicesList = mockServices;
 
   String currentUserId = 'u2';
 
   String selectedProfessional = '';
+  String selectedService = '';
 
   void changeSelectedProfessional(String value) {
     selectedProfessional = value;
   }
+
+  void changeSelectedService(String value) {
+    selectedService = value;
+  }
+
   // DateTime? selectedIntialDate = DateTime(2026);
   // DateTime? selectedFinalDate = DateTime(2027);
-  // String? selectedStatus = 'Agendado';
-  // String? selectedProfessional = 'a1';
 
   void changeSelectedChip(AppointmentStatus status) {
     if (selectedStatusList.contains(status)) {
@@ -36,6 +40,18 @@ class AppointmentController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void exitFilters() {
+    selectedStatusList = [
+      AppointmentStatus.agendado,
+      AppointmentStatus.cancelado,
+      AppointmentStatus.concluido,
+    ];
+    selectedProfessional = '';
+    selectedService = '';
+
+    notifyListeners();
+  }
+
   void clearFilters() {
     selectedStatusList = [
       AppointmentStatus.agendado,
@@ -43,6 +59,7 @@ class AppointmentController extends ChangeNotifier {
       AppointmentStatus.concluido,
     ];
     selectedProfessional = '';
+    selectedService = '';
 
     getAppointment();
     notifyListeners();
@@ -58,7 +75,8 @@ class AppointmentController extends ChangeNotifier {
       return item.clientId == currentUserId &&
           selectedStatusList.contains(item.status) &&
           (selectedProfessional == '' ||
-              item.barber.name == selectedProfessional);
+              item.barber.name == selectedProfessional) &&
+          (selectedService == '' || item.service.name == selectedService);
     }).toList();
 
     appointmentList.sort((a, b) {
