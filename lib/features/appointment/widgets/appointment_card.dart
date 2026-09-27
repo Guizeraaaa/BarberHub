@@ -150,7 +150,50 @@ class AppointmentCard extends StatelessWidget {
                 ),
                 type == CardType.scheduled
                     ? IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              icon: Icon(
+                                Icons.delete,
+                                size: 100,
+                                color: AppColors.orangeLigth,
+                              ),
+                              title: Text(
+                                'Cancelar Agendamento?',
+                                style: AppTextStyle.tittle.copyWith(
+                                  color: AppColors.orangeLigth,
+                                ),
+                              ),
+                              content: Text(
+                                'Deseja cancelar o agendamento? Essa ação não pode ser desfeita. Volte a tela de "Agendar" para agendar um novo serviço.',
+                                style: AppTextStyle.body.copyWith(
+                                  color: AppColors.grey,
+                                ),
+                              ),
+                              actions: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('Voltar'),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () {},
+                                        child: Text('Cancelar'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                         icon: Icon(Icons.delete, color: AppColors.orangeLigth),
                       )
                     : SizedBox.shrink(),
