@@ -14,6 +14,15 @@ class Utils {
     return DateFormat('HH:mm').format(date);
   }
 
+<<<<<<< HEAD
+  static String fullDateFormat(DateTime date) {
+    return DateFormat("EEEE, d 'de' MMMM").format(date);
+  }
+
+
+
+=======
+>>>>>>> 889dc45ebcfa9ca765f924da3d794b4c93d9b16e
   static String durationFormat(int minutes) {
     final hours = minutes ~/ 60;
     final remainingMinutes = minutes % 60;
