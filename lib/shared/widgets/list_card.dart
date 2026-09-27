@@ -54,7 +54,11 @@ class ListCard extends StatelessWidget {
               children: [
                 avatar,
                 const SizedBox(width: 16),
+<<<<<<< HEAD
                 Expanded(child: _buildTexts()),
+=======
+                Expanded(child: _buildTexts()), // ocupa só o espaço que sobra
+>>>>>>> 889dc45ebcfa9ca765f924da3d794b4c93d9b16e
                 _buildTrailing(),
               ],
             ),
