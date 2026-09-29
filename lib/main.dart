@@ -1,6 +1,7 @@
 import 'package:barberhub/features/login/controllers/login_controller.dart';
 import 'package:barberhub/features/appointment/controllers/appointment_controller.dart';
 import 'package:barberhub/features/appointment/pages/appointment_page.dart';
+import 'package:barberhub/features/scheduling/controllers/scheduling_controller.dart';
 import 'package:barberhub/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -34,6 +35,12 @@ class MainApp extends StatelessWidget {
             return AppointmentController();
           },
         ),
+       ChangeNotifierProvider(
+          create: (context) {
+            return SchedulingController();
+          },
+        ),
+    
       ],
       builder: (context, child) {
         return MaterialApp(

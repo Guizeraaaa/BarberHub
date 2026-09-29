@@ -1,6 +1,5 @@
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
-import 'package:barberhub/shared/utils.dart';
 import 'package:flutter/material.dart';
 
 class DateSlotPicker extends StatelessWidget {
@@ -19,6 +18,33 @@ class DateSlotPicker extends StatelessWidget {
   final VoidCallback onDateTap;
   final ValueChanged<String> onSlotSelected;
 
+  static const _weekdays = [
+    'segunda',
+    'terça',
+    'quarta',
+    'quinta',
+    'sexta',
+    'sábado',
+    'domingo',
+  ];
+  static const _months = [
+    'janeiro',
+    'fevereiro',
+    'março',
+    'abril',
+    'maio',
+    'junho',
+    'julho',
+    'agosto',
+    'setembro',
+    'outubro',
+    'novembro',
+    'dezembro',
+  ];
+
+  String get _dateLabel =>
+      '${_weekdays[date.weekday - 1]}, ${date.day} ${_months[date.month - 1]}';
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -29,8 +55,9 @@ class DateSlotPicker extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
         boxShadow: [
           BoxShadow(
-            color: AppColors.grey.withValues(alpha: 0.3),
-            blurRadius: 8,
+            color: Colors.grey.withValues(alpha: 0.3),
+            spreadRadius: 4,
+            blurRadius: 4,
             offset: const Offset(0, 2),
           ),
         ],
@@ -54,15 +81,12 @@ class DateSlotPicker extends StatelessWidget {
         spacing: 12,
         children: [
           Icon(Icons.calendar_month, color: AppColors.white),
-          Flexible(
-            child: Text(
-              'Selecione uma data e horário',
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyle.body.copyWith(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: AppColors.white,
-              ),
+          Text(
+            'Selecione uma data e horário',
+            style: AppTextStyle.body.copyWith(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: AppColors.white,
             ),
           ),
         ],
@@ -81,10 +105,7 @@ class DateSlotPicker extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         spacing: 6,
         children: [
-          Text(
-            Utils.fullDateFormat(date),
-            style: AppTextStyle.body.copyWith(fontSize: 18),
-          ),
+          Text(_dateLabel, style: AppTextStyle.body.copyWith(fontSize: 18)),
           const Icon(Icons.arrow_drop_down),
         ],
       ),

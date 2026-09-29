@@ -7,9 +7,14 @@ import 'package:flutter/material.dart';
 enum CardType { scheduled, finishied }
 
 class AppointmentCard extends StatelessWidget {
-  const AppointmentCard({super.key, required this.appointment});
+  const AppointmentCard({
+    super.key,
+    required this.appointment,
+    required this.onCancel,
+  });
 
   final Appointment appointment;
+  final VoidCallback onCancel;
   CardType get type {
     if (appointment.status == AppointmentStatus.agendado) {
       return CardType.scheduled;
@@ -49,14 +54,6 @@ class AppointmentCard extends StatelessWidget {
     }
   }
 
-  String getAppointmentStatus(AppointmentStatus status) {
-    return switch (status) {
-      AppointmentStatus.agendado => 'AGENDADO',
-      AppointmentStatus.cancelado => 'CANCELADO',
-      AppointmentStatus.concluido => 'FINALIZADO',
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -83,7 +80,7 @@ class AppointmentCard extends StatelessWidget {
                           : AppTextStyle.tittle.copyWith(color: AppColors.grey),
                     ),
                     Text(
-                      '14:00',
+                      Utils.hourFormat(appointment.dateTime),
                       style: AppTextStyle.subTittle.copyWith(
                         color: AppColors.grey,
                       ),
@@ -99,7 +96,7 @@ class AppointmentCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    getAppointmentStatus(appointment.status),
+                    Utils.formatAppointmentStatus(appointment.status),
                     style: AppTextStyle.body.copyWith(
                       color: type == CardType.scheduled
                           ? AppColors.orangeDark
@@ -120,7 +117,7 @@ class AppointmentCard extends StatelessWidget {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Serviço + Serviço',
+                            text: appointment.service.name,
                             style: type == CardType.scheduled
                                 ? AppTextStyle.subTittle
                                 : AppTextStyle.subTittle.copyWith(
@@ -136,7 +133,9 @@ class AppointmentCard extends StatelessWidget {
                                   ),
                           ),
                           TextSpan(
-                            text: 'Duração',
+                            text: Utils.durationFormat(
+                              appointment.service.durationMinutes,
+                            ),
                             style: type == CardType.scheduled
                                 ? AppTextStyle.subTittle
                                 : AppTextStyle.subTittle.copyWith(
@@ -147,7 +146,7 @@ class AppointmentCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '[Lucas Ramos]',
+                      appointment.barber.name,
                       style: AppTextStyle.subTittle.copyWith(
                         color: AppColors.grey,
                       ),
@@ -156,8 +155,54 @@ class AppointmentCard extends StatelessWidget {
                 ),
                 type == CardType.scheduled
                     ? IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.edit, color: AppColors.orangeLigth),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              icon: Icon(
+                                Icons.delete,
+                                size: 100,
+                                color: AppColors.orangeLigth,
+                              ),
+                              title: Text(
+                                'Cancelar Agendamento?',
+                                style: AppTextStyle.tittle.copyWith(
+                                  color: AppColors.orangeLigth,
+                                ),
+                              ),
+                              content: Text(
+                                'Deseja cancelar o agendamento? Essa ação não pode ser desfeita. Volte a tela de "Agendar" para agendar um novo serviço.',
+                                style: AppTextStyle.body.copyWith(
+                                  color: AppColors.grey,
+                                ),
+                              ),
+                              actions: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('Voltar'),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          onCancel();
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text('Cancelar'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        icon: Icon(Icons.delete, color: AppColors.orangeLigth),
                       )
                     : SizedBox.shrink(),
               ],

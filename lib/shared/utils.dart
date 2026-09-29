@@ -1,3 +1,4 @@
+import 'package:barberhub/shared/models/Appointment.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
@@ -14,15 +15,10 @@ class Utils {
     return DateFormat('HH:mm').format(date);
   }
 
-<<<<<<< HEAD
   static String fullDateFormat(DateTime date) {
     return DateFormat("EEEE, d 'de' MMMM").format(date);
   }
 
-
-
-=======
->>>>>>> 889dc45ebcfa9ca765f924da3d794b4c93d9b16e
   static String durationFormat(int minutes) {
     final hours = minutes ~/ 60;
     final remainingMinutes = minutes % 60;
@@ -37,5 +33,13 @@ class Utils {
 
     return '$hours ${hours == 1 ? 'hora' : 'horas'} e '
         '$remainingMinutes ${remainingMinutes == 1 ? 'minuto' : 'minutos'}';
+  }
+
+  static String formatAppointmentStatus(AppointmentStatus status) {
+    return switch (status) {
+      AppointmentStatus.agendado => 'Agendado',
+      AppointmentStatus.cancelado => 'Cancelado',
+      AppointmentStatus.concluido => 'Finalizado',
+    };
   }
 }

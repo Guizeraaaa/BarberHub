@@ -1,18 +1,19 @@
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
+import 'package:barberhub/shared/utils.dart';
 import 'package:flutter/material.dart';
 
 // Rodapé da tela Agendar: preço, duração e botão de confirmar.
-class PriceSummary extends StatelessWidget {
-  const PriceSummary({
+class AppPriceSummary extends StatelessWidget {
+  const AppPriceSummary({
     super.key,
-    required this.priceText,
+    required this.price,
     required this.durationMinutes,
     required this.onConfirm,
   });
 
-  final String priceText; // já formatado, ex: 'R\$ 45,00'
-  final int? durationMinutes;
+  final double price;
+  final int durationMinutes;
   final VoidCallback? onConfirm; // null = botão desabilitado
 
   @override
@@ -39,14 +40,13 @@ class PriceSummary extends StatelessWidget {
                   style: AppTextStyle.body.copyWith(color: AppColors.grey),
                 ),
                 Text(
-                  priceText,
+                  Utils.formatCurrency(price),
                   style: AppTextStyle.tittle.copyWith(fontSize: 22),
                 ),
-                if (durationMinutes != null)
-                  Text(
-                    '$durationMinutes minutos',
-                    style: AppTextStyle.body.copyWith(color: AppColors.grey),
-                  ),
+                Text(
+                  Utils.durationFormat(durationMinutes),
+                  style: AppTextStyle.body.copyWith(color: AppColors.grey),
+                ),
               ],
             ),
             Expanded(

@@ -11,6 +11,11 @@ class AppTextStyle {
     fontFamily: 'Barlow',
     fontWeight: FontWeight.bold,
   );
+  static TextStyle label = TextStyle(
+    fontSize: 14,
+    fontFamily: 'Barlow',
+    fontWeight: FontWeight.bold,
+  );
   static TextStyle body = TextStyle(fontSize: 12, fontFamily: 'Barlow');
   static TextStyle bodySmall = TextStyle(fontSize: 8, fontFamily: 'Barlow');
 }

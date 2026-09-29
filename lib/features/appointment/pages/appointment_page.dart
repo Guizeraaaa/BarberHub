@@ -1,8 +1,10 @@
 import 'package:barberhub/features/appointment/controllers/appointment_controller.dart';
 import 'package:barberhub/features/appointment/widgets/appointment_card.dart';
+import 'package:barberhub/features/scheduling/pages/scheduling_page.dart';
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
 import 'package:barberhub/shared/models/Appointment.dart';
+import 'package:barberhub/shared/widgets/app_filter_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +20,6 @@ class AppointmentPage extends StatefulWidget {
 class _AppointmentPageState extends State<AppointmentPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       context.read<AppointmentController>().getAppointment();
@@ -29,13 +30,68 @@ class _AppointmentPageState extends State<AppointmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: AppColors.black,
+        foregroundColor: AppColors.white,
+        onPressed: () {
+          Navigator.pushReplacementNamed(context, SchedulingPage.route);
+        },
+        icon: Icon(Icons.add),
+        label: Text('AGENDAR', style: AppTextStyle.subTittle),
+      ),
       appBar: AppBar(
+        backgroundColor: AppColors.black,
+        centerTitle: true,
         title: Text(
           'COMPROMISSOS',
           style: AppTextStyle.tittle.copyWith(color: AppColors.white),
         ),
-        centerTitle: true,
-        backgroundColor: AppColors.black,
+        actions: [
+          Consumer<AppointmentController>(
+            builder: (context, appointmentController, child) {
+              return IconButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) =>
+                        AppFilterDialog<AppointmentController>(
+                          onChipChanged: (value) {
+                            appointmentController.changeSelectedChip(value);
+                          },
+                          selectedStatusList:
+                              appointmentController.selectedStatusList,
+                          updateFilters: () {
+                            appointmentController.updateFilters();
+                          },
+                          professionalsList:
+                              appointmentController.professionalsList,
+                          selectedProfessional:
+                              appointmentController.selectedProfessional,
+                          changeSelectedProfessional: (value) {
+                            appointmentController.changeSelectedProfessional(
+                              value ?? '',
+                            );
+                          },
+                          clearFilters: () {
+                            appointmentController.clearFilters();
+                          },
+                          servicesList: appointmentController.servicesList,
+                          selectedService:
+                              appointmentController.selectedService,
+                          changeSelectedService: (value) {
+                            appointmentController.changeSelectedService(
+                              value ?? '',
+                            );
+                          },
+                          exitFilters: appointmentController.clearFilters,
+                        ),
+                  );
+                },
+                icon: Icon(Icons.filter_list, color: AppColors.white),
+              );
+            },
+          ),
+        ],
       ),
       body: Consumer<AppointmentController>(
         builder: (context, appointmentController, child) {
@@ -46,11 +102,19 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 children: [
                   Expanded(
                     child: ListView.builder(
+                      padding: EdgeInsets.only(bottom: 80),
                       itemCount: appointmentController.appointmentList.length,
                       itemBuilder: (context, index) {
                         Appointment appointment =
                             appointmentController.appointmentList[index];
-                        return AppointmentCard(appointment: appointment);
+                        return AppointmentCard(
+                          appointment: appointment,
+                          onCancel: () {
+                            appointmentController.cancelAppointment(
+                              appointment,
+                            );
+                          },
+                        );
                       },
                     ),
                   ),

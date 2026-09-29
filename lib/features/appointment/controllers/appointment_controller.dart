@@ -1,19 +1,103 @@
 import 'package:barberhub/shared/mocks/mock_json.dart';
 import 'package:barberhub/shared/models/Appointment.dart';
+import 'package:barberhub/shared/models/barber.dart';
+import 'package:barberhub/shared/models/service.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentController extends ChangeNotifier {
-  DateTime? selectedIntialDate = DateTime(2026);
-  DateTime? selectedFinalDate = DateTime(2027);
-  String? selectedStatus = 'Agendado';
-  String? selectedProfessional = 'a1';
   List<Appointment> appointmentList = [];
+  List<AppointmentStatus> selectedStatusList = [
+    AppointmentStatus.agendado,
+    AppointmentStatus.cancelado,
+    AppointmentStatus.concluido,
+  ];
+  List<Barber> professionalsList = mockBarbers;
+  List<Service> servicesList = mockServices;
 
   String currentUserId = 'u2';
 
+  String selectedProfessional = '';
+  String selectedService = '';
+
+  void changeSelectedProfessional(String value) {
+    selectedProfessional = value;
+  }
+
+  void changeSelectedService(String value) {
+    selectedService = value;
+  }
+
+  // DateTime? selectedIntialDate = DateTime(2026);
+  // DateTime? selectedFinalDate = DateTime(2027);
+
+  void changeSelectedChip(AppointmentStatus status) {
+    if (selectedStatusList.contains(status)) {
+      selectedStatusList.remove(status);
+    } else {
+      selectedStatusList.add(status);
+    }
+
+    notifyListeners();
+  }
+
+  void exitFilters() {
+    selectedStatusList = [
+      AppointmentStatus.agendado,
+      AppointmentStatus.cancelado,
+      AppointmentStatus.concluido,
+    ];
+    selectedProfessional = '';
+    selectedService = '';
+
+    notifyListeners();
+  }
+
+  void clearFilters() {
+    selectedStatusList = [
+      AppointmentStatus.agendado,
+      AppointmentStatus.cancelado,
+      AppointmentStatus.concluido,
+    ];
+    selectedProfessional = '';
+    selectedService = '';
+
+    getAppointment();
+    notifyListeners();
+  }
+
+  void updateFilters() {
+    getAppointment();
+    notifyListeners();
+  }
+
+  // Cancela o agendamento: troca ele na lista por uma cópia com status cancelado.
+  void cancelAppointment(Appointment appointment) {
+    final index = mockAppointments.indexWhere(
+      (item) => item.id == appointment.id,
+    );
+    if (index == -1) {
+      return;
+    }
+
+    mockAppointments[index] = Appointment(
+      id: appointment.id,
+      clientId: appointment.clientId,
+      barber: appointment.barber,
+      service: appointment.service,
+      dateTime: appointment.dateTime,
+      status: AppointmentStatus.cancelado,
+    );
+
+    getAppointment();
+  }
+
   void getAppointment() {
     appointmentList = mockAppointments.where((item) {
-      return item.clientId == currentUserId;
+      return item.clientId == currentUserId &&
+          selectedStatusList.contains(item.status) &&
+          (selectedProfessional == '' ||
+              item.barber.name == selectedProfessional) &&
+          (selectedService == '' || item.service.name == selectedService);
     }).toList();
 
     appointmentList.sort((a, b) {
