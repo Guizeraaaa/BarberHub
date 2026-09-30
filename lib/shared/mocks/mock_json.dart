@@ -120,7 +120,7 @@ final List<Appointment> mockAppointments = [
     client: mockClients[1],
     barber: mockBarbers[1],
     service: mockServices[1],
-    dateTime: _dayAt(-3, 14, 30),
+    dateTime: _dayAt(-2, 14, 30),
     status: AppointmentStatus.concluido,
   ),
 
