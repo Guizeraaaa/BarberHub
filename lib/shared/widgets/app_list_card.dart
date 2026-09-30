@@ -6,8 +6,8 @@ enum CardTone { accent, name, plain }
 
 enum CardTrailing { chevron, action }
 
-class ListCard extends StatelessWidget {
-  const ListCard({
+class AppListCard extends StatelessWidget {
+  const AppListCard({
     super.key,
     required this.title,
     required this.avatar,
@@ -55,6 +55,7 @@ class ListCard extends StatelessWidget {
                 avatar,
                 const SizedBox(width: 16),
                 Expanded(child: _buildTexts()), // ocupa só o espaço que sobra
+                Expanded(child: _buildTexts()),
                 _buildTrailing(),
               ],
             ),

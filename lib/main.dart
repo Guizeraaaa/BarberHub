@@ -1,6 +1,8 @@
 import 'package:barberhub/features/login/controllers/login_controller.dart';
 import 'package:barberhub/features/appointment/controllers/appointment_controller.dart';
-import 'package:barberhub/features/appointment/pages/appointment_page.dart';
+import 'package:barberhub/features/scheduling/controllers/scheduling_controller.dart';
+import 'package:barberhub/features/scheduling/pages/scheduling_page.dart';
+import 'package:barberhub/shared/controllers/appointment_list_controller.dart';
 import 'package:barberhub/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -34,11 +36,23 @@ class MainApp extends StatelessWidget {
             return AppointmentController();
           },
         ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return AppointmentListController();
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return SchedulingController(
+              context.read<AppointmentListController>(),
+            );
+          },
+        ),
       ],
       builder: (context, child) {
         return MaterialApp(
           routes: AppRoutes.routes,
-          initialRoute: AppointmentPage.route,
+          initialRoute: SchedulingPage.route,
           locale: const Locale('pt', 'BR'),
           supportedLocales: const [Locale('pt', 'BR')],
           localizationsDelegates: const [
