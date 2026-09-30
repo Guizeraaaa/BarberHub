@@ -3,8 +3,8 @@ import 'package:barberhub/shared/app_text_style.dart';
 import 'package:barberhub/shared/utils.dart';
 import 'package:flutter/material.dart';
 
-class DateSlotPicker extends StatelessWidget {
-  const DateSlotPicker({
+class AppDateSlotPicker extends StatelessWidget {
+  const AppDateSlotPicker({
     super.key,
     required this.date,
     required this.slots,

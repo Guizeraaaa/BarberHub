@@ -1,260 +1,167 @@
+import 'package:barberhub/shared/controllers/appointment_list_controller.dart';
+import 'package:barberhub/shared/mocks/mock_json.dart';
+import 'package:barberhub/shared/models/Appointment.dart';
+import 'package:barberhub/shared/models/barber.dart';
+import 'package:barberhub/shared/models/client.dart';
+import 'package:barberhub/shared/models/service.dart';
+import 'package:barberhub/shared/utils.dart';
 import 'package:flutter/material.dart';
 
-const Color black = Color(0xFF0E0E0E);
-const Color white = Color(0xFFFFFFFF);
-const Color background = Color(0xFFF4F4F2);
-const Color orange = Color(0xFFB4530F);
-const Color grey = Color(0xFF898989);
+class SchedulingController extends ChangeNotifier {
+  SchedulingController(this.appointmentListController);
 
-class SchedulePage extends StatelessWidget {
-  const SchedulePage({super.key});
+  // Lista compartilhada: é aqui que o novo agendamento é salvo.
+  final AppointmentListController appointmentListController;
 
-  static String route = '/schedule';
+  // Mesmo usuário fixo do AppointmentController do Lucas (mockClients[1] = 'u2'),
+  // até o login guardar quem está logado.
+  Client currentClient = mockClients[1];
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: background,
-      appBar: AppBar(
-        backgroundColor: black,
-        foregroundColor: white,
-        toolbarHeight: 64,
-        centerTitle: true,
-        title: Text(
-          'AGENDAR',
-          style: TextStyle(
-            fontFamily: 'Barlow',
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.notifications_none)),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.all(16),
-              children: [
-                buildChoiceCard(
-                  initial: 'C',
-                  title: 'Corte',
-                  subtitle: 'R\$ 45,00 - 30 min',
-                ),
-                SizedBox(height: 10),
-                buildChoiceCard(
-                  initial: 'C',
-                  title: 'Carlos Mendes',
-                  subtitle: 'Barbeiro',
-                ),
-                SizedBox(height: 16),
-                buildDateAndTimeBox(),
-              ],
-            ),
-          ),
-          buildFooter(),
-        ],
-      ),
-    );
+  // Distância entre um horário e o próximo na grade (09:00, 09:30, ...).
+  final int slotStepMinutes = 30;
+
+  // Até quantos dias pra frente o cliente pode agendar.
+  final int maxDaysAhead = 30;
+
+  List<Service> servicesList = mockServices;
+  List<Barber> barbersList = mockBarbers;
+
+  Service selectedService = mockServices[0];
+  Barber selectedBarber = mockBarbers[0];
+  DateTime selectedDate = DateUtils.dateOnly(DateTime.now());
+  String? selectedSlot;
+
+  DateTime get firstDate => DateUtils.dateOnly(DateTime.now());
+
+  DateTime get lastDate => firstDate.add(Duration(days: maxDaysAhead));
+
+  bool get canConfirm => selectedSlot != null;
+
+  // Só os barbeiros que fazem o serviço escolhido.
+  List<Barber> barbersForSelectedService() {
+    return barbersList
+        .where(
+          (barber) => barber.offeredServiceIds.contains(selectedService.id),
+        )
+        .toList();
   }
 
-  Widget buildChoiceCard({
-    required String initial,
-    required String title,
-    required String subtitle,
-  }) {
-    return Container(
-      height: 80,
-      padding: EdgeInsets.only(left: 16, right: 8),
-      decoration: BoxDecoration(
-        color: white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 26,
-            backgroundColor: Color(0xFFD6D6D2),
-            child: Text(initial, style: TextStyle(fontSize: 22, color: black)),
-          ),
-          SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontFamily: 'Barlow',
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: orange,
-                  ),
-                ),
-                Text(
-                  subtitle,
-                  style: TextStyle(
-                    fontFamily: 'Barlow',
-                    fontSize: 14,
-                    color: grey,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              'Alterar',
-              style: TextStyle(
-                fontFamily: 'Barlow',
-                fontWeight: FontWeight.bold,
-                color: orange,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+  void selectService(Service service) {
+    selectedService = service;
+
+    // Se o barbeiro atual não faz esse serviço, troca pelo primeiro que faz.
+    final barbers = barbersForSelectedService();
+    if (!barbers.contains(selectedBarber)) {
+      selectedBarber = barbers.first;
+    }
+
+    selectedSlot = null;
+    notifyListeners();
   }
 
-  Widget buildDateAndTimeBox() {
-    List<String> slots = ['09:00', '09:30', '10:00', '10:30', '11:00', '14:00'];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: white,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        children: [
-          Container(
-            height: 56,
-            color: black,
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Icon(Icons.calendar_month, color: white),
-                SizedBox(width: 12),
-                Text(
-                  'Selecione uma data e horário',
-                  style: TextStyle(
-                    fontFamily: 'Barlow',
-                    fontSize: 18,
-                    color: white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'quinta, 24 setembro',
-                  style: TextStyle(
-                    fontFamily: 'Barlow',
-                    fontSize: 18,
-                    color: black,
-                  ),
-                ),
-                Icon(Icons.arrow_drop_down, color: black),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(16, 4, 16, 16),
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (String slot in slots) buildSlot(slot, slot == '10:00'),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+  void selectBarber(Barber barber) {
+    selectedBarber = barber;
+    selectedSlot = null;
+    notifyListeners();
   }
 
-  Widget buildSlot(String time, bool selected) {
-    return SizedBox(
-      width: 72,
-      height: 44,
-      child: OutlinedButton(
-        onPressed: () {},
-        style: OutlinedButton.styleFrom(
-          padding: EdgeInsets.zero,
-          backgroundColor: selected ? black : white,
-          foregroundColor: selected ? white : black,
-          side: BorderSide(color: selected ? black : grey),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-        ),
-        child: Text(
-          time,
-          style: TextStyle(fontFamily: 'Barlow', fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
+  void selectDate(DateTime date) {
+    selectedDate = DateUtils.dateOnly(date);
+    selectedSlot = null;
+    notifyListeners();
   }
 
-  Widget buildFooter() {
-    return Container(
-      color: white,
-      padding: EdgeInsets.all(16),
-      child: SafeArea(
-        top: false,
-        child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('A partir de', style: TextStyle(color: grey)),
-                Text(
-                  'R\$ 45,00',
-                  style: TextStyle(
-                    fontFamily: 'Barlow',
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text('30 minutos', style: TextStyle(color: grey)),
-              ],
-            ),
-            SizedBox(width: 16),
-            Expanded(
-              child: SizedBox(
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: black,
-                    foregroundColor: white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                  ),
-                  child: Text(
-                    'CONFIRMAR',
-                    style: TextStyle(
-                      fontFamily: 'Barlow',
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+  void selectSlot(String slot) {
+    selectedSlot = slot;
+    notifyListeners();
+  }
+
+  // Monta os horários livres do barbeiro no dia escolhido.
+  // Um horário entra na lista quando:
+  // - o serviço inteiro cabe antes do fim do expediente;
+  // - ainda não passou (para o dia de hoje);
+  // - não bate com outro agendamento do mesmo barbeiro.
+  List<String> availableSlots() {
+    final List<String> slots = [];
+    final now = DateTime.now();
+    int minutes = selectedBarber.startMinutes;
+
+    while (minutes + selectedService.durationMinutes <=
+        selectedBarber.endMinutes) {
+      // DateTime aceita minutos acima de 59: (0h, 570min) vira 09:30.
+      final start = DateTime(
+        selectedDate.year,
+        selectedDate.month,
+        selectedDate.day,
+        0,
+        minutes,
+      );
+      final end = start.add(Duration(minutes: selectedService.durationMinutes));
+
+      if (start.isAfter(now) && !isBarberBusy(start, end)) {
+        slots.add(Utils.hourFormat(start));
+      }
+
+      minutes = minutes + slotStepMinutes;
+    }
+
+    return slots;
+  }
+
+  bool isBarberBusy(DateTime start, DateTime end) {
+    final barberAppointments = appointmentListController.appointmentsOfBarber(
+      selectedBarber.id,
+    );
+
+    for (final appointment in barberAppointments) {
+      if (appointment.status == AppointmentStatus.agendado) {
+        final appointmentStart = appointment.dateTime;
+        final appointmentEnd = appointmentStart.add(
+          Duration(minutes: appointment.service.durationMinutes),
+        );
+
+        // Dois horários se chocam quando um começa antes do outro terminar.
+        if (start.isBefore(appointmentEnd) && appointmentStart.isBefore(end)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  // Salva o agendamento na lista compartilhada e limpa o horário escolhido.
+  // Devolve o agendamento criado (ou null se nenhum horário foi escolhido).
+  Appointment? confirmAppointment() {
+    final slot = selectedSlot;
+    if (slot == null) {
+      return null;
+    }
+
+    final appointment = appointmentListController.createAppointment(
+      client: currentClient,
+      barber: selectedBarber,
+      service: selectedService,
+      dateTime: slotToDateTime(slot),
+    );
+
+    selectedSlot = null;
+    notifyListeners();
+    return appointment;
+  }
+
+  // '10:30' -> selectedDate às 10:30
+  DateTime slotToDateTime(String slot) {
+    final parts = slot.split(':');
+    final hour = int.parse(parts[0]);
+    final minute = int.parse(parts[1]);
+
+    return DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+      hour,
+      minute,
     );
   }
 }

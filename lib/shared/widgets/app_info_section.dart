@@ -2,8 +2,8 @@ import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
 import 'package:flutter/material.dart';
 
-class InfoSection extends StatelessWidget {
-  const InfoSection({super.key, required this.label, required this.value});
+class AppInfoSection extends StatelessWidget {
+  const AppInfoSection({super.key, required this.label, required this.value});
 
   final String label;
   final String value;

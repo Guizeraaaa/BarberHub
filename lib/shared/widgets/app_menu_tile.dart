@@ -2,8 +2,8 @@ import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
 import 'package:flutter/material.dart';
 
-class MenuTile extends StatelessWidget {
-  const MenuTile({
+class AppMenuTile extends StatelessWidget {
+  const AppMenuTile({
     super.key,
     required this.icon,
     required this.label,

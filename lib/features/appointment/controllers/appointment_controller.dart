@@ -1,5 +1,6 @@
 import 'package:barberhub/shared/mocks/mock_json.dart';
 import 'package:barberhub/shared/models/Appointment.dart';
+import 'package:barberhub/shared/models/client.dart';
 import 'package:barberhub/shared/models/barber.dart';
 import 'package:barberhub/shared/models/service.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class AppointmentController extends ChangeNotifier {
   List<Barber> professionalsList = mockBarbers;
   List<Service> servicesList = mockServices;
 
-  String currentUserId = 'u2';
+  Client currentClient = mockClients[1];
 
   String selectedProfessional = '';
   String selectedService = '';
@@ -78,12 +79,7 @@ class AppointmentController extends ChangeNotifier {
 
   void getAppointment() {
     appointmentList = mockAppointments.where((item) {
-      return item.clientId == currentUserId &&
-          selectedStatusList.contains(item.status) &&
-          _isInsideSelectedDateRange(item.dateTime) &&
-          (selectedProfessional == '' ||
-              item.barber.name == selectedProfessional) &&
-          (selectedService == '' || item.service.name == selectedService);
+      return item.client.id == currentClient.id;
     }).toList();
 
     appointmentList.sort((a, b) {
