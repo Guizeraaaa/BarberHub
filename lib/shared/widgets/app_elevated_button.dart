@@ -49,7 +49,7 @@ class AppElevatedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
-      style: _getButtonStyle(),
+      // style: _getButtonStyle(),
       child: isLoading
           ? SizedBox(
               height: 20,
