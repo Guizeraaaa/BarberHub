@@ -1,6 +1,7 @@
 import 'package:barberhub/features/login/controllers/login_controller.dart';
 import 'package:barberhub/features/appointment/controllers/appointment_controller.dart';
-import 'package:barberhub/features/appointment/pages/appointment_page.dart';
+// import 'package:barberhub/features/appointment/pages/appointment_page.dart';
+import 'package:barberhub/features/login/pages/login_page.dart';
 import 'package:barberhub/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +34,7 @@ class MainApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           routes: AppRoutes.routes,
-          initialRoute: AppointmentPage.route,
+          initialRoute: LoginPage.route,
         );
       },
     );
