@@ -72,7 +72,7 @@ class _AppFilterDialogState<T> extends State<AppFilterDialog<T>> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      insetPadding: EdgeInsets.all(20),
+      insetPadding: EdgeInsets.all(10),
       child: Container(
         width: double.infinity,
         height: 600,
