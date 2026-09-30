@@ -1,10 +1,11 @@
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
+import 'package:barberhub/shared/utils.dart';
 import 'package:flutter/material.dart';
 
 // Rodapé da tela Agendar: preço, duração e botão de confirmar.
-class PriceSummary extends StatelessWidget {
-  const PriceSummary({
+class AppPriceSummary extends StatelessWidget {
+  const AppPriceSummary({
     super.key,
     required this.priceText,
     required this.durationMinutes,
@@ -44,7 +45,7 @@ class PriceSummary extends StatelessWidget {
                 ),
                 if (durationMinutes != null)
                   Text(
-                    '$durationMinutes minutos',
+                    Utils.durationFormat(durationMinutes!),
                     style: AppTextStyle.body.copyWith(color: AppColors.grey),
                   ),
               ],
