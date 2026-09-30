@@ -9,7 +9,7 @@ class Appointment {
   final Barber barber;
   final Service service;
   final DateTime dateTime;
-  final AppointmentStatus status;
+  AppointmentStatus status;
 
   Appointment({
     required this.id,

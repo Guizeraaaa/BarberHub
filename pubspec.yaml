@@ -20,14 +20,6 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
 
-  flutter:
-    sdk: flutter
-  flutter_localizations:
-    sdk: flutter
-  intl: any
-  provider: ^6.1.5+1
-  wakelock_plus: ^1.8.0
-
 flutter:
   uses-material-design: true
 
@@ -81,5 +73,3 @@ flutter:
         - asset: assets/fonts/Barlow-BlackItalic.ttf
           weight: 900
           style: italic
-
-

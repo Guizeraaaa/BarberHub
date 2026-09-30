@@ -1,3 +1,4 @@
+import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
 import 'package:flutter/material.dart';
 
@@ -10,45 +11,35 @@ class AppElevatedButton extends StatelessWidget {
     required this.type,
     required this.onPressed,
     this.isLoading = false,
-    this.backgroundColor,
-    this.foregroundColor,
-    this.textButtonColor,
-    this.borderColor,
   });
 
   final String textButton;
-  final Color? textButtonColor;
   final VoidCallback? onPressed;
   final bool isLoading;
-  final Color? borderColor;
-
-  final Color? backgroundColor;
-  final Color? foregroundColor;
-
   final ButtonType type;
 
   ButtonStyle _getButtonStyle() {
     switch (type) {
       case ButtonType.filled:
         return ElevatedButton.styleFrom(
+          backgroundColor: AppColors.orangeLigth,
           minimumSize: Size.fromHeight(40),
-          foregroundColor: foregroundColor,
-          backgroundColor: backgroundColor,
+          foregroundColor: AppColors.white,
           textStyle: AppTextStyle.subTittle,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(10),
           ),
         );
 
       case ButtonType.outlined:
         return ElevatedButton.styleFrom(
+          backgroundColor: AppColors.white,
           minimumSize: Size.fromHeight(40),
-          foregroundColor: foregroundColor,
-          backgroundColor: backgroundColor,
-          textStyle: AppTextStyle.subTittle,
+          foregroundColor: AppColors.white,
+          textStyle: AppTextStyle.subTittle.copyWith(color: AppColors.black),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
-            side: BorderSide(color: borderColor ?? Colors.black, width: 2),
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(color: AppColors.orangeLigth, width: 2),
           ),
         );
     }
@@ -64,11 +55,20 @@ class AppElevatedButton extends StatelessWidget {
               height: 20,
               width: 20,
               child: CircularProgressIndicator(
-                color: foregroundColor,
+                color: type == ButtonType.filled
+                    ? AppColors.white
+                    : AppColors.orangeLigth,
                 strokeWidth: 3,
               ),
             )
-          : Text(textButton, style: TextStyle(color: textButtonColor)),
+          : Text(
+              textButton,
+              style: type == ButtonType.filled
+                  ? AppTextStyle.subTittle.copyWith(color: AppColors.white)
+                  : AppTextStyle.subTittle.copyWith(
+                      color: AppColors.orangeLigth,
+                    ),
+            ),
     );
   }
 }
