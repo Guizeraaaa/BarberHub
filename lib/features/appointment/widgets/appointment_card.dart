@@ -7,7 +7,11 @@ import 'package:flutter/material.dart';
 enum CardType { scheduled, finishied }
 
 class AppointmentCard extends StatelessWidget {
-  const AppointmentCard({super.key, required this.appointment});
+  const AppointmentCard({
+    super.key,
+    required this.appointment,
+    required this.cancelAppointment,
+  });
 
   final Appointment appointment;
   CardType get type {
@@ -17,6 +21,8 @@ class AppointmentCard extends StatelessWidget {
 
     return CardType.finishied;
   }
+
+  final VoidCallback cancelAppointment;
 
   BoxDecoration _getCardStyle() {
     switch (type) {
@@ -150,10 +156,11 @@ class AppointmentCard extends StatelessWidget {
                 ),
                 type == CardType.scheduled
                     ? IconButton(
-                        onPressed: () {
-                          showDialog(
+                        onPressed: () async {
+                          final exclude = await showDialog<bool>(
                             context: context,
                             builder: (context) => AlertDialog(
+                              backgroundColor: AppColors.white,
                               icon: Icon(
                                 Icons.delete,
                                 size: 100,
@@ -167,9 +174,10 @@ class AppointmentCard extends StatelessWidget {
                               ),
                               content: Text(
                                 'Deseja cancelar o agendamento? Essa ação não pode ser desfeita. Volte a tela de "Agendar" para agendar um novo serviço.',
-                                style: AppTextStyle.body.copyWith(
+                                style: AppTextStyle.label.copyWith(
                                   color: AppColors.grey,
                                 ),
+                                textAlign: TextAlign.center,
                               ),
                               actions: [
                                 Row(
@@ -177,14 +185,16 @@ class AppointmentCard extends StatelessWidget {
                                     Expanded(
                                       child: ElevatedButton(
                                         onPressed: () {
-                                          Navigator.pop(context);
+                                          Navigator.pop(context, false);
                                         },
                                         child: Text('Voltar'),
                                       ),
                                     ),
                                     Expanded(
                                       child: ElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.pop(context, true);
+                                        },
                                         child: Text('Cancelar'),
                                       ),
                                     ),
@@ -193,6 +203,9 @@ class AppointmentCard extends StatelessWidget {
                               ],
                             ),
                           );
+                          if (exclude == true) {
+                            cancelAppointment();
+                          }
                         },
                         icon: Icon(Icons.delete, color: AppColors.orangeLigth),
                       )

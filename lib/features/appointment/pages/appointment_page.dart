@@ -40,40 +40,39 @@ class _AppointmentPageState extends State<AppointmentPage> {
           Consumer<AppointmentController>(
             builder: (context, appointmentController, child) {
               return IconButton(
-                onPressed: () {
-                  showDialog(
+                onPressed: () async {
+                  await showDialog<bool>(
                     context: context,
                     builder: (context) =>
                         AppFilterDialog<AppointmentController>(
-                          onChipChanged: (value) {
-                            appointmentController.changeSelectedChip(value);
-                          },
                           selectedStatusList:
                               appointmentController.selectedStatusList,
-                          updateFilters: () {
-                            appointmentController.updateFilters();
-                          },
                           professionalsList:
                               appointmentController.professionalsList,
                           selectedProfessional:
                               appointmentController.selectedProfessional,
-                          changeSelectedProfessional: (value) {
-                            appointmentController.changeSelectedProfessional(
-                              value ?? '',
-                            );
-                          },
-                          clearFilters: () {
-                            appointmentController.clearFilters();
-                          },
                           servicesList: appointmentController.servicesList,
                           selectedService:
                               appointmentController.selectedService,
-                          changeSelectedService: (value) {
-                            appointmentController.changeSelectedService(
-                              value ?? '',
-                            );
+                          selectedDateRange:
+                              appointmentController.selectedDateRange,
+                          onApply:
+                              ({
+                                required statusList,
+                                required professional,
+                                required service,
+                                required dateRange,
+                              }) {
+                                appointmentController.applyFilters(
+                                  statusList: statusList,
+                                  professional: professional,
+                                  service: service,
+                                  dateRange: dateRange,
+                                );
+                              },
+                          onClear: () {
+                            appointmentController.clearFilters();
                           },
-                          exitFilters: appointmentController.clearFilters,
                         ),
                   );
                 },
@@ -96,7 +95,14 @@ class _AppointmentPageState extends State<AppointmentPage> {
                       itemBuilder: (context, index) {
                         Appointment appointment =
                             appointmentController.appointmentList[index];
-                        return AppointmentCard(appointment: appointment);
+                        return AppointmentCard(
+                          appointment: appointment,
+                          cancelAppointment: () {
+                            appointmentController.cancelAppointment(
+                              appointmentController.appointmentList[index],
+                            );
+                          },
+                        );
                       },
                     ),
                   ),

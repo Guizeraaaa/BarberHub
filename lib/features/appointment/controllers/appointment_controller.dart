@@ -18,6 +18,7 @@ class AppointmentController extends ChangeNotifier {
 
   String selectedProfessional = '';
   String selectedService = '';
+  DateTimeRange<DateTime>? selectedDateRange;
 
   void changeSelectedProfessional(String value) {
     selectedProfessional = value;
@@ -27,8 +28,10 @@ class AppointmentController extends ChangeNotifier {
     selectedService = value;
   }
 
-  // DateTime? selectedIntialDate = DateTime(2026);
-  // DateTime? selectedFinalDate = DateTime(2027);
+  void changeSelectedDateRange(DateTimeRange<DateTime> value) {
+    selectedDateRange = value;
+    notifyListeners();
+  }
 
   void changeSelectedChip(AppointmentStatus status) {
     if (selectedStatusList.contains(status)) {
@@ -36,18 +39,6 @@ class AppointmentController extends ChangeNotifier {
     } else {
       selectedStatusList.add(status);
     }
-
-    notifyListeners();
-  }
-
-  void exitFilters() {
-    selectedStatusList = [
-      AppointmentStatus.agendado,
-      AppointmentStatus.cancelado,
-      AppointmentStatus.concluido,
-    ];
-    selectedProfessional = '';
-    selectedService = '';
 
     notifyListeners();
   }
@@ -60,9 +51,24 @@ class AppointmentController extends ChangeNotifier {
     ];
     selectedProfessional = '';
     selectedService = '';
+    selectedDateRange = null;
 
     getAppointment();
     notifyListeners();
+  }
+
+  void applyFilters({
+    required List<AppointmentStatus> statusList,
+    required String professional,
+    required String service,
+    required DateTimeRange<DateTime>? dateRange,
+  }) {
+    selectedStatusList = List.of(statusList);
+    selectedProfessional = professional;
+    selectedService = service;
+    selectedDateRange = dateRange;
+
+    updateFilters();
   }
 
   void updateFilters() {
@@ -74,6 +80,7 @@ class AppointmentController extends ChangeNotifier {
     appointmentList = mockAppointments.where((item) {
       return item.clientId == currentUserId &&
           selectedStatusList.contains(item.status) &&
+          _isInsideSelectedDateRange(item.dateTime) &&
           (selectedProfessional == '' ||
               item.barber.name == selectedProfessional) &&
           (selectedService == '' || item.service.name == selectedService);
@@ -83,13 +90,34 @@ class AppointmentController extends ChangeNotifier {
       final aAgendado = a.status == AppointmentStatus.agendado;
       final bAgendado = b.status == AppointmentStatus.agendado;
 
-      // Agendados ficam sempre no topo
       if (aAgendado && !bAgendado) return -1;
       if (!aAgendado && bAgendado) return 1;
 
-      // Dentro do mesmo grupo, ordena pela data
       return a.dateTime.compareTo(b.dateTime);
     });
+
     notifyListeners();
+  }
+
+  bool _isInsideSelectedDateRange(DateTime date) {
+    final range = selectedDateRange;
+    if (range == null) return true;
+
+    final start = DateTime(
+      range.start.year,
+      range.start.month,
+      range.start.day,
+    );
+    final endExclusive = DateTime(
+      range.end.year,
+      range.end.month,
+      range.end.day + 1,
+    );
+
+    return !date.isBefore(start) && date.isBefore(endExclusive);
+  }
+
+  void cancelAppointment(Appointment appointment) {
+    // appointment.status = AppointmentStatus.cancelado;
   }
 }
