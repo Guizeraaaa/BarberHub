@@ -1,5 +1,6 @@
 import 'package:barberhub/shared/mocks/mock_json.dart';
 import 'package:barberhub/shared/models/Appointment.dart';
+import 'package:barberhub/shared/models/client.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentController extends ChangeNotifier {
@@ -9,11 +10,11 @@ class AppointmentController extends ChangeNotifier {
   String? selectedProfessional = 'a1';
   List<Appointment> appointmentList = [];
 
-  String currentUserId = 'u2';
+  Client currentClient = mockClients[1];
 
   void getAppointment() {
     appointmentList = mockAppointments.where((item) {
-      return item.clientId == currentUserId;
+      return item.client.id == currentClient.id;
     }).toList();
 
     appointmentList.sort((a, b) {

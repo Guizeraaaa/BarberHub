@@ -2,6 +2,7 @@ import 'package:barberhub/shared/controllers/appointment_list_controller.dart';
 import 'package:barberhub/shared/mocks/mock_json.dart';
 import 'package:barberhub/shared/models/Appointment.dart';
 import 'package:barberhub/shared/models/barber.dart';
+import 'package:barberhub/shared/models/client.dart';
 import 'package:barberhub/shared/models/service.dart';
 import 'package:barberhub/shared/utils.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +13,9 @@ class SchedulingController extends ChangeNotifier {
   // Lista compartilhada: é aqui que o novo agendamento é salvo.
   final AppointmentListController appointmentListController;
 
-  // Mesmo usuário fixo do AppointmentController do Lucas ('u2'),
+  // Mesmo usuário fixo do AppointmentController do Lucas (mockClients[1] = 'u2'),
   // até o login guardar quem está logado.
-  String currentUserId = 'u2';
+  Client currentClient = mockClients[1];
 
   // Distância entre um horário e o próximo na grade (09:00, 09:30, ...).
   final int slotStepMinutes = 30;
@@ -138,7 +139,7 @@ class SchedulingController extends ChangeNotifier {
     }
 
     final appointment = appointmentListController.createAppointment(
-      clientId: currentUserId,
+      client: currentClient,
       barber: selectedBarber,
       service: selectedService,
       dateTime: slotToDateTime(slot),
