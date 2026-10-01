@@ -54,8 +54,7 @@ class AppointmentController extends ChangeNotifier {
     selectedService = '';
     selectedDateRange = null;
 
-    getAppointment();
-    notifyListeners();
+    updateFilters();
   }
 
   void applyFilters({
@@ -79,7 +78,12 @@ class AppointmentController extends ChangeNotifier {
 
   void getAppointment() {
     appointmentList = mockAppointments.where((item) {
-      return item.client.id == currentClient.id;
+      return item.client.id == currentClient.id &&
+          selectedStatusList.contains(item.status) &&
+          _isInsideSelectedDateRange(item.dateTime) &&
+          (selectedProfessional == '' ||
+              item.barber.name == selectedProfessional) &&
+          (selectedService == '' || item.service.name == selectedService);
     }).toList();
 
     appointmentList.sort((a, b) {
@@ -114,6 +118,15 @@ class AppointmentController extends ChangeNotifier {
   }
 
   void cancelAppointment(Appointment appointment) {
-    // appointment.status = AppointmentStatus.cancelado;
+    appointment.status = AppointmentStatus.cancelado;
+
+    final index = mockAppointments.indexWhere(
+      (item) => item.id == appointment.id,
+    );
+    if (index != -1) {
+      mockAppointments[index].status = AppointmentStatus.cancelado;
+    }
+
+    getAppointment();
   }
 }

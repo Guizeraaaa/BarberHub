@@ -2,6 +2,7 @@ import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
 import 'package:barberhub/shared/models/Appointment.dart';
 import 'package:barberhub/shared/utils.dart';
+import 'package:barberhub/shared/widgets/app_elevated_button.dart';
 import 'package:flutter/material.dart';
 
 enum CardType { scheduled, finishied }
@@ -159,48 +160,17 @@ class AppointmentCard extends StatelessWidget {
                         onPressed: () async {
                           final exclude = await showDialog<bool>(
                             context: context,
-                            builder: (context) => AlertDialog(
-                              backgroundColor: AppColors.white,
+                            builder: (context) => AppConfirmationDialog(
+                              title: 'Cancelar Agendamento?',
+                              content:
+                                  'Deseja cancelar o agendamento? Essa ação não pode ser desfeita. Volte a tela de "Agendar" para agendar um novo serviço.',
                               icon: Icon(
                                 Icons.delete,
                                 size: 100,
                                 color: AppColors.orangeLigth,
                               ),
-                              title: Text(
-                                'Cancelar Agendamento?',
-                                style: AppTextStyle.tittle.copyWith(
-                                  color: AppColors.orangeLigth,
-                                ),
-                              ),
-                              content: Text(
-                                'Deseja cancelar o agendamento? Essa ação não pode ser desfeita. Volte a tela de "Agendar" para agendar um novo serviço.',
-                                style: AppTextStyle.label.copyWith(
-                                  color: AppColors.grey,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              actions: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, false);
-                                        },
-                                        child: Text('Voltar'),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, true);
-                                        },
-                                        child: Text('Cancelar'),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                              labelCancel: 'Voltar',
+                              labelConfirm: 'Cancelar',
                             ),
                           );
                           if (exclude == true) {
@@ -215,6 +185,65 @@ class AppointmentCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class AppConfirmationDialog extends StatelessWidget {
+  const AppConfirmationDialog({
+    super.key,
+    required this.title,
+    required this.content,
+    required this.icon,
+    required this.labelCancel,
+    required this.labelConfirm,
+  });
+
+  final String title;
+  final String content;
+  final Icon icon;
+  final String labelCancel;
+  final String labelConfirm;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: AppColors.white,
+      icon: icon,
+      title: Text(
+        title,
+        style: AppTextStyle.tittle.copyWith(color: AppColors.orangeLigth),
+      ),
+      content: Text(
+        content,
+        style: AppTextStyle.label.copyWith(color: AppColors.grey),
+        textAlign: TextAlign.center,
+      ),
+      actions: [
+        Row(
+          spacing: 10,
+          children: [
+            Expanded(
+              child: AppElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+                textButton: labelCancel,
+                type: ButtonType.outlined,
+              ),
+            ),
+            Expanded(
+              child: AppElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+                textButton: labelConfirm,
+                type: ButtonType.filled,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
