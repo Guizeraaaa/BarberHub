@@ -54,8 +54,7 @@ class AppointmentController extends ChangeNotifier {
     selectedService = '';
     selectedDateRange = null;
 
-    getAppointment();
-    notifyListeners();
+    updateFilters();
   }
 
   void applyFilters({
@@ -95,25 +94,16 @@ class AppointmentController extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool _isInsideSelectedDateRange(DateTime date) {
-    final range = selectedDateRange;
-    if (range == null) return true;
-
-    final start = DateTime(
-      range.start.year,
-      range.start.month,
-      range.start.day,
-    );
-    final endExclusive = DateTime(
-      range.end.year,
-      range.end.month,
-      range.end.day + 1,
-    );
-
-    return !date.isBefore(start) && date.isBefore(endExclusive);
-  }
-
   void cancelAppointment(Appointment appointment) {
-    // appointment.status = AppointmentStatus.cancelado;
+    appointment.status = AppointmentStatus.cancelado;
+
+    final index = mockAppointments.indexWhere(
+      (item) => item.id == appointment.id,
+    );
+    if (index != -1) {
+      mockAppointments[index].status = AppointmentStatus.cancelado;
+    }
+
+    getAppointment();
   }
 }
