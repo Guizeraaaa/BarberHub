@@ -1,3 +1,4 @@
+import 'package:barberhub/features/appointment/pages/appointment_page.dart';
 import 'package:barberhub/features/scheduling/controllers/scheduling_controller.dart';
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/models/service.dart';
@@ -96,6 +97,10 @@ class SchedulingPage extends StatelessWidget {
                             ),
                           ),
                         );
+
+                        // pushNamed (e não pushReplacementNamed): assim o
+                        // "voltar" de Compromissos traz de volta para Agendar.
+                        Navigator.pushNamed(context, AppointmentPage.route);
                       }
                     : null,
               ),

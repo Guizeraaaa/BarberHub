@@ -54,8 +54,8 @@ class AppListCard extends StatelessWidget {
               children: [
                 avatar,
                 const SizedBox(width: 16),
-                Expanded(child: _buildTexts()), // ocupa só o espaço que sobra
-                Expanded(child: _buildTexts()),
+                Expanded(child: _buildTexts()), 
+              //  Expanded(child: _buildTexts()),
                 _buildTrailing(),
               ],
             ),

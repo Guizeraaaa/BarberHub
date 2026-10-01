@@ -1,3 +1,4 @@
+import 'package:barberhub/shared/controllers/appointment_list_controller.dart';
 import 'package:barberhub/shared/mocks/mock_json.dart';
 import 'package:barberhub/shared/models/Appointment.dart';
 import 'package:barberhub/shared/models/client.dart';
@@ -6,6 +7,15 @@ import 'package:barberhub/shared/models/service.dart';
 import 'package:flutter/material.dart';
 
 class AppointmentController extends ChangeNotifier {
+  AppointmentController(this.appointmentListController) {
+    // Sempre que a lista compartilhada mudar (novo agendamento na tela
+    // Agendar ou um cancelamento), a lista desta tela é montada de novo.
+    appointmentListController.addListener(getAppointment);
+  }
+
+  // Lista compartilhada: a mesma que a tela Agendar usa para salvar.
+  final AppointmentListController appointmentListController;
+
   List<Appointment> appointmentList = [];
   List<AppointmentStatus> selectedStatusList = [
     AppointmentStatus.agendado,
@@ -77,9 +87,12 @@ class AppointmentController extends ChangeNotifier {
   }
 
   void getAppointment() {
-    appointmentList = mockAppointments.where((item) {
-      return item.client.id == currentClient.id &&
-          selectedStatusList.contains(item.status) &&
+    final clientAppointments = appointmentListController.appointmentsOfClient(
+      currentClient,
+    );
+
+    appointmentList = clientAppointments.where((item) {
+      return selectedStatusList.contains(item.status) &&
           _isInsideSelectedDateRange(item.dateTime) &&
           (selectedProfessional == '' ||
               item.barber.name == selectedProfessional) &&
@@ -117,16 +130,15 @@ class AppointmentController extends ChangeNotifier {
     return !date.isBefore(start) && date.isBefore(endExclusive);
   }
 
+  // Cancela na lista compartilhada. Não precisa chamar getAppointment aqui:
+  // a lista avisa os ouvintes e o listener do construtor já atualiza a tela.
   void cancelAppointment(Appointment appointment) {
-    appointment.status = AppointmentStatus.cancelado;
+    appointmentListController.cancelAppointment(appointment);
+  }
 
-    final index = mockAppointments.indexWhere(
-      (item) => item.id == appointment.id,
-    );
-    if (index != -1) {
-      mockAppointments[index].status = AppointmentStatus.cancelado;
-    }
-
-    getAppointment();
+  @override
+  void dispose() {
+    appointmentListController.removeListener(getAppointment);
+    super.dispose();
   }
 }

@@ -31,14 +31,18 @@ class MainApp extends StatelessWidget {
             return LoginController();
           },
         ),
+        // A lista compartilhada vem antes: os controllers abaixo dependem dela
+        // (um provider só enxerga os que foram declarados acima dele).
         ChangeNotifierProvider(
           create: (context) {
-            return AppointmentController();
+            return AppointmentListController();
           },
         ),
         ChangeNotifierProvider(
           create: (context) {
-            return AppointmentListController();
+            return AppointmentController(
+              context.read<AppointmentListController>(),
+            );
           },
         ),
         ChangeNotifierProvider(
