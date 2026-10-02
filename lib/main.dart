@@ -1,9 +1,14 @@
+import 'package:barberhub/features/barber_list/controllers/barber_list_controller.dart';
+import 'package:barberhub/features/barber_list/pages/barber_list_page.dart';
 import 'package:barberhub/features/login/controllers/login_controller.dart';
 import 'package:barberhub/features/appointment/controllers/appointment_controller.dart';
 import 'package:barberhub/features/scheduling/controllers/scheduling_controller.dart';
 import 'package:barberhub/features/scheduling/pages/scheduling_page.dart';
+import 'package:barberhub/features/service_list/controllers/service_list_controller.dart';
+import 'package:barberhub/features/service_list/pages/service_list_page.dart';
 import 'package:barberhub/shared/controllers/appointment_list_controller.dart';
 import 'package:barberhub/routes.dart';
+import 'package:barberhub/shared/models/service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -48,11 +53,21 @@ class MainApp extends StatelessWidget {
             );
           },
         ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return ServiceListController();
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return BarberListController();
+          },
+        ),
       ],
       builder: (context, child) {
         return MaterialApp(
           routes: AppRoutes.routes,
-          initialRoute: SchedulingPage.route,
+          initialRoute: BarberListPage.route,
           locale: const Locale('pt', 'BR'),
           supportedLocales: const [Locale('pt', 'BR')],
           localizationsDelegates: const [

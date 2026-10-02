@@ -40,9 +40,7 @@ class SchedulingController extends ChangeNotifier {
   // Só os barbeiros que fazem o serviço escolhido.
   List<Barber> barbersForSelectedService() {
     return barbersList
-        .where(
-          (barber) => barber.offeredServiceIds.contains(selectedService.id),
-        )
+        .where((barber) => barber.offeredService.contains(selectedService.id))
         .toList();
   }
 
