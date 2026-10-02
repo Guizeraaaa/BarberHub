@@ -1,6 +1,8 @@
+import 'package:barberhub/features/theme/theme_controller.dart';
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,17 +16,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final themeController = context.watch<ThemeController>();
     return Scaffold(
-      backgroundColor: AppColors.black,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: AppColors.white),
-        backgroundColor: AppColors.black,
-        centerTitle: true,
-        title: Text(
-          'Home',
-          style: AppTextStyle.tittle.copyWith(color: AppColors.white),
-        ),
-      ),
+      appBar: AppBar(centerTitle: true, title: Text('Home')),
       drawer: Drawer(
         child: Column(
           children: [
@@ -32,65 +27,55 @@ class _HomePageState extends State<HomePage> {
               child: ListView(
                 children: [
                   DrawerHeader(
-                    child: Text('BarberHub', style: AppTextStyle.tittle),
+                    child: Text(
+                      'BarberHub',
+                      style: AppTextStyle.bodyHome,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   ListTile(
-                    leading: Icon(Icons.cut, color: AppColors.orangeDark),
-                    title: Text(
-                      'Serviços',
-                      style: TextStyle(color: AppColors.black),
+                    leading: Icon(Icons.dark_mode),
+                    title: Text('Modo escuro'),
+                    trailing: Switch(
+                      value: themeController.darkMode,
+                      onChanged: (value) {
+                        themeController.toggleTheme();
+                      },
                     ),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.cut),
+                    title: Text('Serviços'),
                     onTap: () {
                       // Navigator.pushNamed(context, '/serviços');
                     },
                   ),
 
                   ListTile(
-                    leading: Icon(Icons.person, color: AppColors.orangeDark),
-                    title: Text(
-                      'Perfil',
-                      style: TextStyle(color: AppColors.black),
-                    ),
+                    leading: Icon(Icons.person),
+                    title: Text('Perfil'),
                     onTap: () {
                       // Navigator.pushNamed(context, '/perfil');
                     },
                   ),
                   ListTile(
-                    leading: Icon(
-                      Icons.calendar_month,
-                      color: AppColors.orangeDark,
-                    ),
-                    title: Text(
-                      'Agendamentos',
-                      style: TextStyle(color: AppColors.black),
-                    ),
+                    leading: Icon(Icons.calendar_month),
+                    title: Text('Agendamentos'),
                     onTap: () {
                       // Navigator.pushNamed(context, '/agendamentos');
                     },
                   ),
                   ListTile(
-                    leading: Icon(
-                      Icons.question_mark,
-                      color: AppColors.orangeDark,
-                    ),
-                    title: Text(
-                      'Quem somos?',
-                      style: TextStyle(color: AppColors.black),
-                    ),
+                    leading: Icon(Icons.question_mark),
+                    title: Text('Quem somos?'),
                     onTap: () {
                       // Navigator.pushNamed(context, '/sobre');
                     },
                   ),
 
                   ListTile(
-                    leading: Icon(
-                      Icons.location_on,
-                      color: AppColors.orangeDark,
-                    ),
-                    title: Text(
-                      'Localização',
-                      style: TextStyle(color: AppColors.black),
-                    ),
+                    leading: Icon(Icons.location_on),
+                    title: Text('Localização'),
                     onTap: () {
                       // Navigator.pushNamed(context, '/loc');
                     },
@@ -102,9 +87,7 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextButton(
-                onPressed: () {
-                  print('log-out');
-                },
+                onPressed: () {},
                 child: Text('Sair', style: TextStyle(color: AppColors.red)),
               ),
             ),
@@ -117,10 +100,14 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               Image(
-                image: AssetImage('assets/images/barberhub.jpg'),
+                image: AssetImage(
+                  isDark
+                      ? 'assets/images/barberhub.jpg'
+                      : 'assets/images/barberhub_white.jpg',
+                ),
                 height: 300,
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 50),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -132,55 +119,53 @@ class _HomePageState extends State<HomePage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               SizedBox(
-                                width: 60,
-                                height: 75,
+                                width: 50,
+                                height: 65,
                                 child: GestureDetector(
                                   onTap: () {
                                     // Navigator.pushNamed(context, '/agendar');
                                     print('cliquei');
                                   },
-                                  child: Image.asset(
-                                    'assets/images/agendar.png',
-                                    fit: BoxFit.contain,
-                                  ),
+                                  child: Icon(Icons.calendar_month, size: 50),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
                                   'Agendar',
-                                  textAlign: TextAlign.center,
                                   style: AppTextStyle.bodyHome,
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ],
                           ),
 
-                          const SizedBox(width: 105),
+                          const SizedBox(width: 80),
 
                           Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               SizedBox(
-                                width: 75,
-                                height: 75,
+                                width: 50,
+                                height: 65,
                                 child: GestureDetector(
                                   onTap: () {
                                     print('cliquei');
                                     // Navigator.pushNamed(context, '/localizacao');
                                   },
-                                  child: Image.asset(
-                                    'assets/images/localizacao.png',
-                                    fit: BoxFit.contain,
-                                  ),
+                                  child: Icon(Icons.location_on, size: 50),
+                                  // Image.asset(
+                                  //   'assets/images/localizacao.png',
+                                  //   fit: BoxFit.contain,
+                                  // ),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
-                                  'Localização',
-                                  textAlign: TextAlign.center,
+                                  'Compromissos',
                                   style: AppTextStyle.bodyHome,
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ],
@@ -188,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
 
-                      const SizedBox(height: 105),
+                      const SizedBox(height: 80),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -197,55 +182,49 @@ class _HomePageState extends State<HomePage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               SizedBox(
-                                width: 60,
-                                height: 75,
+                                width: 50,
+                                height: 65,
                                 child: GestureDetector(
                                   onTap: () {
                                     print('cliquei');
                                     // Navigator.pushNamed(context, '/servicos');
                                   },
-                                  child: Image.asset(
-                                    'assets/images/servicos.png',
-                                    fit: BoxFit.contain,
-                                  ),
+                                  child: Icon(Icons.cut, size: 50),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
                                   'Serviços',
-                                  textAlign: TextAlign.center,
                                   style: AppTextStyle.bodyHome,
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ],
                           ),
 
-                          const SizedBox(width: 105),
+                          const SizedBox(width: 80),
 
                           Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               SizedBox(
-                                width: 60,
-                                height: 75,
+                                width: 50,
+                                height: 65,
                                 child: GestureDetector(
                                   onTap: () {
                                     print('cliquei');
                                     // Navigator.pushNamed(context, '/profissionais');
                                   },
-                                  child: Image.asset(
-                                    'assets/images/profissionais.png',
-                                    fit: BoxFit.contain,
-                                  ),
+                                  child: Icon(Icons.person_sharp, size: 50),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
                                   'Profissionais',
-                                  textAlign: TextAlign.center,
                                   style: AppTextStyle.bodyHome,
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                             ],

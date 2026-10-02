@@ -15,7 +15,6 @@ class AppTextStyle {
   static TextStyle bodyHome = GoogleFonts.robotoCondensed(
     fontSize: 22,
     fontWeight: FontWeight.bold,
-    color: Colors.white,
   );
   static TextStyle body = TextStyle(fontSize: 12, fontFamily: 'Barlow');
   static TextStyle bodySmall = TextStyle(fontSize: 8, fontFamily: 'Barlow');
