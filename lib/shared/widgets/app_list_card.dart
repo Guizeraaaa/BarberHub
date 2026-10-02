@@ -10,17 +10,21 @@ class AppListCard extends StatelessWidget {
   const AppListCard({
     super.key,
     required this.title,
-    required this.avatar,
     this.subtitle,
     this.tone = CardTone.accent,
     this.trailing = CardTrailing.chevron,
     this.actionLabel = 'Alterar',
     this.onTap,
+    this.professional,
+    this.avatar,
+    this.isList,
   });
 
   final String title;
+  final Widget? avatar;
+  final bool? isList;
+  final bool? professional;
   final String? subtitle;
-  final Widget avatar;
   final CardTone tone;
   final CardTrailing trailing;
   final String actionLabel;
@@ -52,10 +56,33 @@ class AppListCard extends StatelessWidget {
             padding: const EdgeInsets.only(left: 16, right: 12),
             child: Row(
               children: [
-                avatar,
+                isList == true
+                    ? Container(
+                        alignment: Alignment.center,
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: professional == true
+                              ? AppColors.grey
+                              : AppColors.greyLight,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: professional == true
+                            ? Icon(
+                                Icons.account_circle_outlined,
+                                size: 40,
+                                color: AppColors.greyLight,
+                              )
+                            : Text(
+                                title[0],
+                                style: AppTextStyle.subTittle.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                      )
+                    : avatar ?? SizedBox.shrink(),
                 const SizedBox(width: 16),
                 Expanded(child: _buildTexts()), // ocupa só o espaço que sobra
-                Expanded(child: _buildTexts()),
                 _buildTrailing(),
               ],
             ),
