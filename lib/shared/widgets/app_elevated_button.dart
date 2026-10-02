@@ -1,3 +1,4 @@
+import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
 import 'package:flutter/material.dart';
 
@@ -17,23 +18,37 @@ class AppElevatedButton extends StatelessWidget {
   });
 
   final String textButton;
-  final Color? textButtonColor;
   final VoidCallback? onPressed;
   final bool isLoading;
-  final Color? borderColor;
+  final ButtonType type;
 
+  // Cores opcionais: quem não passar nada fica com o padrão laranja/branco.
   final Color? backgroundColor;
   final Color? foregroundColor;
+  final Color? textButtonColor;
+  final Color? borderColor;
 
-  final ButtonType type;
+  Color get _backgroundColor {
+    if (backgroundColor != null) {
+      return backgroundColor!;
+    }
+    return type == ButtonType.filled ? AppColors.orangeLigth : AppColors.white;
+  }
+
+  Color get _textColor {
+    if (textButtonColor != null) {
+      return textButtonColor!;
+    }
+    return type == ButtonType.filled ? AppColors.white : AppColors.orangeLigth;
+  }
 
   ButtonStyle _getButtonStyle() {
     switch (type) {
       case ButtonType.filled:
         return ElevatedButton.styleFrom(
           minimumSize: Size.fromHeight(40),
-          foregroundColor: foregroundColor,
-          backgroundColor: backgroundColor,
+          foregroundColor: foregroundColor ?? AppColors.white,
+          backgroundColor: _backgroundColor,
           textStyle: AppTextStyle.subTittle,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
@@ -43,12 +58,15 @@ class AppElevatedButton extends StatelessWidget {
       case ButtonType.outlined:
         return ElevatedButton.styleFrom(
           minimumSize: Size.fromHeight(40),
-          foregroundColor: foregroundColor,
-          backgroundColor: backgroundColor,
+          foregroundColor: foregroundColor ?? AppColors.white,
+          backgroundColor: _backgroundColor,
           textStyle: AppTextStyle.subTittle,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25),
-            side: BorderSide(color: borderColor ?? Colors.black, width: 2),
+            side: BorderSide(
+              color: borderColor ?? AppColors.orangeLigth,
+              width: 2,
+            ),
           ),
         );
     }
@@ -64,11 +82,14 @@ class AppElevatedButton extends StatelessWidget {
               height: 20,
               width: 20,
               child: CircularProgressIndicator(
-                color: foregroundColor,
+                color: _textColor,
                 strokeWidth: 3,
               ),
             )
-          : Text(textButton, style: TextStyle(color: textButtonColor)),
+          : Text(
+              textButton,
+              style: AppTextStyle.subTittle.copyWith(color: _textColor),
+            ),
     );
   }
 }

@@ -1,13 +1,13 @@
-import 'package:barberhub/features/barber_list/controllers/barber_list_controller.dart';
-import 'package:barberhub/features/barber_list/pages/barber_list_page.dart';
-import 'package:barberhub/features/login/controllers/login_controller.dart';
 import 'package:barberhub/features/appointment/controllers/appointment_controller.dart';
-// import 'package:barberhub/features/appointment/pages/appointment_page.dart';
+import 'package:barberhub/features/barber_list/controllers/barber_list_controller.dart';
+import 'package:barberhub/features/login/controllers/login_controller.dart';
 import 'package:barberhub/features/login/pages/login_page.dart';
+import 'package:barberhub/features/scheduling/controllers/scheduling_controller.dart';
+import 'package:barberhub/features/service_list/controllers/service_list_controller.dart';
 import 'package:barberhub/features/theme/app_theme.dart';
 import 'package:barberhub/features/theme/theme_controller.dart';
 import 'package:barberhub/routes.dart';
-import 'package:barberhub/shared/models/service.dart';
+import 'package:barberhub/shared/controllers/appointment_list_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -42,6 +42,28 @@ class MainApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) {
+            return AppointmentListController();
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return SchedulingController(
+              context.read<AppointmentListController>(),
+            );
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return ServiceListController();
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return BarberListController();
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
             return ThemeController();
           },
         ),
@@ -57,6 +79,13 @@ class MainApp extends StatelessWidget {
               : ThemeMode.light,
           routes: AppRoutes.routes,
           initialRoute: LoginPage.route,
+          locale: const Locale('pt', 'BR'),
+          supportedLocales: const [Locale('pt', 'BR')],
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
         );
       },
     );

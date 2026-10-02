@@ -1,3 +1,8 @@
+import 'package:barberhub/features/appointment/pages/appointment_page.dart';
+import 'package:barberhub/features/barber_list/pages/barber_list_page.dart';
+import 'package:barberhub/features/login/pages/login_page.dart';
+import 'package:barberhub/features/scheduling/pages/scheduling_page.dart';
+import 'package:barberhub/features/service_list/pages/service_list_page.dart';
 import 'package:barberhub/features/theme/theme_controller.dart';
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
@@ -47,7 +52,8 @@ class _HomePageState extends State<HomePage> {
                     leading: Icon(Icons.cut),
                     title: Text('Serviços'),
                     onTap: () {
-                      // Navigator.pushNamed(context, '/serviços');
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, ServiceListPage.route);
                     },
                   ),
 
@@ -62,7 +68,8 @@ class _HomePageState extends State<HomePage> {
                     leading: Icon(Icons.calendar_month),
                     title: Text('Agendamentos'),
                     onTap: () {
-                      // Navigator.pushNamed(context, '/agendamentos');
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, AppointmentPage.route);
                     },
                   ),
                   ListTile(
@@ -87,7 +94,13 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    LoginPage.route,
+                    (route) => false,
+                  );
+                },
                 child: Text('Sair', style: TextStyle(color: AppColors.red)),
               ),
             ),
@@ -123,8 +136,10 @@ class _HomePageState extends State<HomePage> {
                                 height: 65,
                                 child: GestureDetector(
                                   onTap: () {
-                                    // Navigator.pushNamed(context, '/agendar');
-                                    print('cliquei');
+                                    Navigator.pushNamed(
+                                      context,
+                                      SchedulingPage.route,
+                                    );
                                   },
                                   child: Icon(Icons.calendar_month, size: 50),
                                 ),
@@ -150,10 +165,12 @@ class _HomePageState extends State<HomePage> {
                                 height: 65,
                                 child: GestureDetector(
                                   onTap: () {
-                                    print('cliquei');
-                                    // Navigator.pushNamed(context, '/localizacao');
+                                    Navigator.pushNamed(
+                                      context,
+                                      AppointmentPage.route,
+                                    );
                                   },
-                                  child: Icon(Icons.location_on, size: 50),
+                                  child: Icon(Icons.event_note, size: 50),
                                   // Image.asset(
                                   //   'assets/images/localizacao.png',
                                   //   fit: BoxFit.contain,
@@ -186,8 +203,10 @@ class _HomePageState extends State<HomePage> {
                                 height: 65,
                                 child: GestureDetector(
                                   onTap: () {
-                                    print('cliquei');
-                                    // Navigator.pushNamed(context, '/servicos');
+                                    Navigator.pushNamed(
+                                      context,
+                                      ServiceListPage.route,
+                                    );
                                   },
                                   child: Icon(Icons.cut, size: 50),
                                 ),
@@ -213,8 +232,10 @@ class _HomePageState extends State<HomePage> {
                                 height: 65,
                                 child: GestureDetector(
                                   onTap: () {
-                                    print('cliquei');
-                                    // Navigator.pushNamed(context, '/profissionais');
+                                    Navigator.pushNamed(
+                                      context,
+                                      BarberListPage.route,
+                                    );
                                   },
                                   child: Icon(Icons.person_sharp, size: 50),
                                 ),

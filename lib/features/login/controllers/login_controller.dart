@@ -37,7 +37,7 @@ class LoginController extends ChangeNotifier {
     if (key.currentState!.validate()) {
       final userType = login();
       if (userType == UserType.client) {
-        Navigator.pushNamed(context, HomePage.route);
+        Navigator.pushReplacementNamed(context, HomePage.route);
         print('vai pra home page');
       } else if (userType == UserType.barber) {
         // Navigator.pushNamed(context, '/dashboard');
