@@ -27,19 +27,19 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.black,
-        centerTitle: true,
-        title: Text(
-          'COMPROMISSOS',
-          style: AppTextStyle.tittle.copyWith(color: AppColors.white),
-        ),
-        actions: [
-          Consumer<AppointmentController>(
-            builder: (context, appointmentController, child) {
-              return IconButton(
+    return Consumer<AppointmentController>(
+      builder: (context, appointmentController, child) {
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          appBar: AppBar(
+            backgroundColor: AppColors.black,
+            centerTitle: true,
+            title: Text(
+              'COMPROMISSOS',
+              style: AppTextStyle.tittle.copyWith(color: AppColors.white),
+            ),
+            actions: [
+              IconButton(
                 onPressed: () async {
                   await showDialog<bool>(
                     context: context,
@@ -77,20 +77,18 @@ class _AppointmentPageState extends State<AppointmentPage> {
                   );
                 },
                 icon: Icon(Icons.filter_list, color: AppColors.white),
-              );
-            },
+              ),
+            ],
           ),
-        ],
-      ),
-      body: Consumer<AppointmentController>(
-        builder: (context, appointmentController, child) {
-          return SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
                       itemCount: appointmentController.appointmentList.length,
                       itemBuilder: (context, index) {
                         Appointment appointment =
@@ -105,13 +103,13 @@ class _AppointmentPageState extends State<AppointmentPage> {
                         );
                       },
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
