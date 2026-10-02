@@ -7,5 +7,6 @@ class BarberListController extends ChangeNotifier {
 
   void getBarbers() {
     barbersList = mockBarbers;
+    notifyListeners();
   }
 }

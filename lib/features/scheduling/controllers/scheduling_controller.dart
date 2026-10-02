@@ -10,17 +10,13 @@ import 'package:flutter/material.dart';
 class SchedulingController extends ChangeNotifier {
   SchedulingController(this.appointmentListController);
 
-  // Lista compartilhada: é aqui que o novo agendamento é salvo.
   final AppointmentListController appointmentListController;
 
-  // Mesmo usuário fixo do AppointmentController do Lucas (mockClients[1] = 'u2'),
-  // até o login guardar quem está logado.
+  
   Client currentClient = mockClients[1];
 
-  // Distância entre um horário e o próximo na grade (09:00, 09:30, ...).
   final int slotStepMinutes = 30;
 
-  // Até quantos dias pra frente o cliente pode agendar.
   final int maxDaysAhead = 30;
 
   List<Service> servicesList = mockServices;
@@ -37,17 +33,15 @@ class SchedulingController extends ChangeNotifier {
 
   bool get canConfirm => selectedSlot != null;
 
-  // Só os barbeiros que fazem o serviço escolhido.
   List<Barber> barbersForSelectedService() {
     return barbersList
-        .where((barber) => barber.offeredService.contains(selectedService.id))
+        .where((barber) => barber.offeredService.any((service) => service.id == selectedService.id))
         .toList();
   }
 
   void selectService(Service service) {
     selectedService = service;
 
-    // Se o barbeiro atual não faz esse serviço, troca pelo primeiro que faz.
     final barbers = barbersForSelectedService();
     if (!barbers.contains(selectedBarber)) {
       selectedBarber = barbers.first;
@@ -74,11 +68,7 @@ class SchedulingController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Monta os horários livres do barbeiro no dia escolhido.
-  // Um horário entra na lista quando:
-  // - o serviço inteiro cabe antes do fim do expediente;
-  // - ainda não passou (para o dia de hoje);
-  // - não bate com outro agendamento do mesmo barbeiro.
+  
   List<String> availableSlots() {
     final List<String> slots = [];
     final now = DateTime.now();
@@ -118,7 +108,6 @@ class SchedulingController extends ChangeNotifier {
           Duration(minutes: appointment.service.durationMinutes),
         );
 
-        // Dois horários se chocam quando um começa antes do outro terminar.
         if (start.isBefore(appointmentEnd) && appointmentStart.isBefore(end)) {
           return true;
         }
@@ -128,8 +117,7 @@ class SchedulingController extends ChangeNotifier {
     return false;
   }
 
-  // Salva o agendamento na lista compartilhada e limpa o horário escolhido.
-  // Devolve o agendamento criado (ou null se nenhum horário foi escolhido).
+  
   Appointment? confirmAppointment() {
     final slot = selectedSlot;
     if (slot == null) {
@@ -148,7 +136,6 @@ class SchedulingController extends ChangeNotifier {
     return appointment;
   }
 
-  // '10:30' -> selectedDate às 10:30
   DateTime slotToDateTime(String slot) {
     final parts = slot.split(':');
     final hour = int.parse(parts[0]);
