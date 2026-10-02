@@ -19,87 +19,89 @@ class SchedulingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const AppHeader(title: 'Agendar'),
+      appBar: const AppHeader(title: 'Agendar', leading: HeaderLeading.back),
       body: Consumer<SchedulingController>(
         builder: (context, schedulingController, child) {
           final service = schedulingController.selectedService;
           final barber = schedulingController.selectedBarber;
 
-          return Column(
+          return ListView(
+            padding: const EdgeInsets.all(16),
             children: [
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    AppListCard(
-                      title: service.name,
-                      subtitle: serviceSubtitle(service),
-                      avatar: AppAvatar(initial: service.name[0]),
-                      tone: CardTone.name,
-                      trailing: CardTrailing.action,
-                      onTap: () {
-                        showServices(context, schedulingController);
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    AppListCard(
-                      title: barber.name,
-                      subtitle: 'Barbeiro',
-                      avatar: AppAvatar(initial: barber.name[0]),
-                      tone: CardTone.name,
-                      trailing: CardTrailing.action,
-                      onTap: () {
-                        showBarbers(context, schedulingController);
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    AppDateSlotPicker(
-                      date: schedulingController.selectedDate,
-                      slots: schedulingController.availableSlots(),
-                      selectedSlot: schedulingController.selectedSlot,
-                      onDateTap: () async {
-                        final pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: schedulingController.selectedDate,
-                          firstDate: schedulingController.firstDate,
-                          lastDate: schedulingController.lastDate,
-                        );
-                        if (pickedDate != null) {
-                          schedulingController.selectDate(pickedDate);
-                        }
-                      },
-                      onSlotSelected: (slot) {
-                        schedulingController.selectSlot(slot);
-                      },
-                    ),
-                  ],
-                ),
+              AppListCard(
+                title: service.name,
+                subtitle: serviceSubtitle(service),
+                avatar: AppAvatar(initial: service.name[0]),
+                tone: CardTone.name,
+                trailing: CardTrailing.action,
+                onTap: () {
+                  showServices(context, schedulingController);
+                },
               ),
-              AppPriceSummary(
-                priceText: Utils.formatCurrency(service.price),
-                durationMinutes: service.durationMinutes,
-                onConfirm: schedulingController.canConfirm
-                    ? () {
-                        final appointment = schedulingController
-                            .confirmAppointment();
-                        if (appointment == null) {
-                          return;
-                        }
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: AppColors.black,
-                            content: Text(
-                              'Agendado: ${appointment.service.name} com '
-                              '${appointment.barber.name} em '
-                              '${Utils.dateFormat(appointment.dateTime)} às '
-                              '${Utils.hourFormat(appointment.dateTime)}',
-                            ),
-                          ),
-                        );
-                      }
-                    : null,
+              const SizedBox(height: 10),
+              AppListCard(
+                title: barber.name,
+                subtitle: 'Barbeiro',
+                avatar: AppAvatar(initial: barber.name[0]),
+                tone: CardTone.name,
+                trailing: CardTrailing.action,
+                onTap: () {
+                  showBarbers(context, schedulingController);
+                },
+              ),
+              const SizedBox(height: 16),
+              AppDateSlotPicker(
+                date: schedulingController.selectedDate,
+                slots: schedulingController.availableSlots(),
+                selectedSlot: schedulingController.selectedSlot,
+                onDateTap: () async {
+                  final pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: schedulingController.selectedDate,
+                    firstDate: schedulingController.firstDate,
+                    lastDate: schedulingController.lastDate,
+                  );
+                  if (pickedDate != null) {
+                    schedulingController.selectDate(pickedDate);
+                  }
+                },
+                onSlotSelected: (slot) {
+                  schedulingController.selectSlot(slot);
+                },
               ),
             ],
+          );
+        },
+      ),
+      // Fica no bottomNavigationBar para o aviso de "Agendado" (SnackBar)
+      // aparecer em cima da barra, e não por cima dela.
+      bottomNavigationBar: Consumer<SchedulingController>(
+        builder: (context, schedulingController, child) {
+          final service = schedulingController.selectedService;
+
+          return AppPriceSummary(
+            priceText: Utils.formatCurrency(service.price),
+            durationMinutes: service.durationMinutes,
+            onConfirm: schedulingController.canConfirm
+                ? () {
+                    final appointment = schedulingController
+                        .confirmAppointment();
+                    if (appointment == null) {
+                      return;
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: AppColors.black,
+                        content: Text(
+                          'Agendado: ${appointment.service.name} com '
+                          '${appointment.barber.name} em '
+                          '${Utils.dateFormat(appointment.dateTime)} às '
+                          '${Utils.hourFormat(appointment.dateTime)}',
+                        ),
+                      ),
+                    );
+                  }
+                : null,
           );
         },
       ),
