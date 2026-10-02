@@ -6,11 +6,16 @@ import 'package:barberhub/features/theme/app_theme.dart';
 import 'package:barberhub/features/theme/theme_controller.dart';
 import 'package:barberhub/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('pt_BR');
+  Intl.defaultLocale = 'pt_BR';
   await WakelockPlus.enable();
   runApp(const MainApp());
 }

@@ -1,10 +1,10 @@
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
-import 'package:barberhub/shared/widgets/avatar_card.dart';
+import 'package:barberhub/shared/widgets/app_avatar_card.dart';
 import 'package:flutter/material.dart';
 
-class DetailHero extends StatelessWidget {
-  const DetailHero({
+class AppDetailHero extends StatelessWidget {
+  const AppDetailHero({
     super.key,
     required this.title,
     this.subtitle,
