@@ -102,8 +102,8 @@ class _HomePageState extends State<HomePage> {
               Image(
                 image: AssetImage(
                   isDark
-                      ? 'assets/images/barberhub.jpg'
-                      : 'assets/images/barberhub_white.jpg',
+                      ? 'assets/images/barberhub_black.png'
+                      : 'assets/images/barberhub_white.png',
                 ),
                 height: 300,
               ),

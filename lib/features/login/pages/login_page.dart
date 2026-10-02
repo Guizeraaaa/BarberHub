@@ -43,7 +43,7 @@ class LoginPage extends StatelessWidget {
                     children: [
                       Spacer(),
                       Image(
-                        image: AssetImage('assets/images/barberhub.jpg'),
+                        image: AssetImage('assets/images/barberhub_black.png'),
                         height: 300,
                       ),
                       SizedBox(height: 15),

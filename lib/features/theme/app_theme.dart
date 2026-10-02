@@ -8,10 +8,7 @@ class AppTheme {
       iconColor: AppColors.orangeDark,
       textColor: AppColors.black,
     ),
-    switchTheme: SwitchThemeData(
-      thumbColor: WidgetStatePropertyAll(AppColors.orangeDark),
-      trackColor: WidgetStatePropertyAll(AppColors.orangeLigth),
-    ),
+
     brightness: Brightness.light,
     colorScheme: ColorScheme.light(primary: AppColors.orangeDark),
     scaffoldBackgroundColor: AppColors.offWhite,
@@ -26,21 +23,18 @@ class AppTheme {
 
   static ThemeData darkTheme = ThemeData(
     listTileTheme: ListTileThemeData(
-      iconColor: AppColors.orangeDark,
+      iconColor: AppColors.orangeLigth,
       textColor: AppColors.white,
     ),
-    switchTheme: SwitchThemeData(
-      thumbColor: WidgetStatePropertyAll(AppColors.orangeDark),
-      trackColor: WidgetStatePropertyAll(AppColors.orangeDark),
-    ),
+
     brightness: Brightness.dark,
     colorScheme: ColorScheme.dark(primary: AppColors.orangeDark),
     scaffoldBackgroundColor: AppColors.black,
-    iconTheme: IconThemeData(color: AppColors.orangeDark),
+    iconTheme: IconThemeData(color: AppColors.orangeLigth),
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.black,
       titleTextStyle: AppTextStyle.bodyHome,
-      iconTheme: IconThemeData(color: AppColors.orangeDark),
+      iconTheme: IconThemeData(color: AppColors.orangeLigth),
     ),
   );
 }
