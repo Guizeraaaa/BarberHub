@@ -20,7 +20,17 @@ final List<Barber> mockBarbers = [
     email: 'carlos@barberhub.com',
     password: '123456',
     birthDate: DateTime(1990, 3, 14),
-    offeredServiceIds: ['s1', 's2', 's3', 's5'],
+    offeredService: [
+      Service(id: 's1', name: 'Corte', price: 45.0, durationMinutes: 30),
+      Service(id: 's2', name: 'Barba', price: 35.0, durationMinutes: 30),
+      Service(
+        id: 's3',
+        name: 'Corte + Barba',
+        price: 70.0,
+        durationMinutes: 60,
+      ),
+      Service(id: 's5', name: 'Pezinho', price: 15.0, durationMinutes: 15),
+    ],
     startMinutes: 540, // 09:00
     endMinutes: 1080, // 18:00
   ),
@@ -30,7 +40,17 @@ final List<Barber> mockBarbers = [
     email: 'rafael@barberhub.com',
     password: '123456',
     birthDate: DateTime(1995, 7, 2),
-    offeredServiceIds: ['s1', 's2', 's3', 's4'],
+    offeredService: [
+      Service(id: 's1', name: 'Corte', price: 45.0, durationMinutes: 30),
+      Service(id: 's2', name: 'Barba', price: 35.0, durationMinutes: 30),
+      Service(
+        id: 's3',
+        name: 'Corte + Barba',
+        price: 70.0,
+        durationMinutes: 60,
+      ),
+      Service(id: 's4', name: 'Sobrancelha', price: 20.0, durationMinutes: 15),
+    ],
     startMinutes: 600, // 10:00
     endMinutes: 1140, // 19:00
   ),
@@ -40,7 +60,17 @@ final List<Barber> mockBarbers = [
     email: 'diego@barberhub.com',
     password: '123456',
     birthDate: DateTime(1988, 11, 25),
-    offeredServiceIds: ['s1', 's3', 's4', 's5'],
+    offeredService: [
+      Service(id: 's1', name: 'Corte', price: 45.0, durationMinutes: 30),
+      Service(
+        id: 's3',
+        name: 'Corte + Barba',
+        price: 70.0,
+        durationMinutes: 60,
+      ),
+      Service(id: 's4', name: 'Sobrancelha', price: 20.0, durationMinutes: 15),
+      Service(id: 's5', name: 'Pezinho', price: 15.0, durationMinutes: 15),
+    ],
     startMinutes: 540, // 09:00
     endMinutes: 1020, // 17:00
   ),
@@ -108,7 +138,7 @@ final List<Appointment> mockAppointments = [
   // ---------- Passado ----------
   Appointment(
     id: 'a1',
-    clientId: 'u1',
+    client: mockClients[0],
     barber: mockBarbers[0],
     service: mockServices[0],
     dateTime: _dayAt(-3, 10, 0),
@@ -117,16 +147,16 @@ final List<Appointment> mockAppointments = [
 
   Appointment(
     id: 'a2',
-    clientId: 'u2',
+    client: mockClients[1],
     barber: mockBarbers[1],
     service: mockServices[1],
-    dateTime: _dayAt(-3, 14, 30),
+    dateTime: _dayAt(-2, 14, 30),
     status: AppointmentStatus.concluido,
   ),
 
   Appointment(
     id: 'a3',
-    clientId: 'u3',
+    client: mockClients[2],
     barber: mockBarbers[2],
     service: mockServices[2],
     dateTime: _dayAt(-2, 9, 0),
@@ -135,7 +165,7 @@ final List<Appointment> mockAppointments = [
 
   Appointment(
     id: 'a4',
-    clientId: 'u5',
+    client: mockClients[4],
     barber: mockBarbers[1],
     service: mockServices[3],
     dateTime: _dayAt(-1, 11, 0),
@@ -146,7 +176,7 @@ final List<Appointment> mockAppointments = [
   // serve para testar o bloqueio de edição.
   Appointment(
     id: 'a5',
-    clientId: 'u4',
+    client: mockClients[3],
     barber: mockBarbers[0],
     service: mockServices[0],
     dateTime: _dayAt(-1, 16, 0),
@@ -156,7 +186,7 @@ final List<Appointment> mockAppointments = [
   // ---------- Hoje ----------
   Appointment(
     id: 'a6',
-    clientId: 'u6',
+    client: mockClients[5],
     barber: mockBarbers[0],
     service: mockServices[0],
     dateTime: _dayAt(0, 17, 0),
@@ -165,7 +195,7 @@ final List<Appointment> mockAppointments = [
 
   Appointment(
     id: 'a7',
-    clientId: 'u2',
+    client: mockClients[1],
     barber: mockBarbers[1],
     service: mockServices[2],
     dateTime: _dayAt(0, 17, 30),
@@ -176,7 +206,7 @@ final List<Appointment> mockAppointments = [
   // Mesmo horário, barbeiros diferentes -> válido.
   Appointment(
     id: 'a8',
-    clientId: 'u3',
+    client: mockClients[2],
     barber: mockBarbers[0],
     service: mockServices[0],
     dateTime: _dayAt(1, 10, 0),
@@ -185,7 +215,7 @@ final List<Appointment> mockAppointments = [
 
   Appointment(
     id: 'a9',
-    clientId: 'u4',
+    client: mockClients[3],
     barber: mockBarbers[1],
     service: mockServices[1],
     dateTime: _dayAt(1, 10, 0),
@@ -194,7 +224,7 @@ final List<Appointment> mockAppointments = [
 
   Appointment(
     id: 'a10',
-    clientId: 'u5',
+    client: mockClients[4],
     barber: mockBarbers[2],
     service: mockServices[0],
     dateTime: _dayAt(2, 15, 0),
@@ -205,7 +235,7 @@ final List<Appointment> mockAppointments = [
   // não deve aparecer em "próximos agendamentos".
   Appointment(
     id: 'a11',
-    clientId: 'u1',
+    client: mockClients[0],
     barber: mockBarbers[0],
     service: mockServices[4],
     dateTime: _dayAt(3, 9, 30),
@@ -214,7 +244,7 @@ final List<Appointment> mockAppointments = [
 
   Appointment(
     id: 'a12',
-    clientId: 'u6',
+    client: mockClients[5],
     barber: mockBarbers[0],
     service: mockServices[2],
     dateTime: _dayAt(5, 14, 0),

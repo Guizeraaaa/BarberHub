@@ -1,3 +1,5 @@
+import 'package:barberhub/features/barber_list/controllers/barber_list_controller.dart';
+import 'package:barberhub/features/barber_list/pages/barber_list_page.dart';
 import 'package:barberhub/features/login/controllers/login_controller.dart';
 import 'package:barberhub/features/appointment/controllers/appointment_controller.dart';
 // import 'package:barberhub/features/appointment/pages/appointment_page.dart';
@@ -5,12 +7,18 @@ import 'package:barberhub/features/login/pages/login_page.dart';
 import 'package:barberhub/features/theme/app_theme.dart';
 import 'package:barberhub/features/theme/theme_controller.dart';
 import 'package:barberhub/routes.dart';
+import 'package:barberhub/shared/models/service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('pt_BR');
+  Intl.defaultLocale = 'pt_BR';
   await WakelockPlus.enable();
   runApp(const MainApp());
 }
