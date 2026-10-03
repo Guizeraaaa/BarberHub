@@ -93,6 +93,7 @@ class SchedulingPage extends StatelessWidget {
                               '${appointment.barber.name} em '
                               '${Utils.dateFormat(appointment.dateTime)} às '
                               '${Utils.hourFormat(appointment.dateTime)}',
+                              style: TextStyle(color: AppColors.white),
                             ),
                           ),
                         );
