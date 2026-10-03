@@ -85,7 +85,7 @@ final AppointmentListController appointmentListController;
   }
 
   void getAppointment() {
-    appointmentList = mockAppointments.where((item) {
+    appointmentList = appointmentListController.appointments.where((item) {
       return item.client.id == currentClient.id &&
           selectedStatusList.contains(item.status) &&
           _isInsideSelectedDateRange(item.dateTime) &&
@@ -126,14 +126,9 @@ final AppointmentListController appointmentListController;
   }
 
   void cancelAppointment(Appointment appointment) {
+  appointment.status = AppointmentStatus.cancelado;
 
-    final index = mockAppointments.indexWhere(
-      (item) => item.id == appointment.id,
-    );
-    if (index != -1) {
-      mockAppointments[index].status = AppointmentStatus.cancelado;
-    }
-
+  
     getAppointment();
   }
 }
