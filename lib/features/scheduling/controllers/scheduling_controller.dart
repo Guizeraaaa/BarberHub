@@ -12,7 +12,6 @@ class SchedulingController extends ChangeNotifier {
 
   final AppointmentListController appointmentListController;
 
-  
   Client currentClient = mockClients[1];
 
   final int slotStepMinutes = 30;
@@ -35,7 +34,11 @@ class SchedulingController extends ChangeNotifier {
 
   List<Barber> barbersForSelectedService() {
     return barbersList
-        .where((barber) => barber.offeredService.any((service) => service.id == selectedService.id))
+        .where(
+          (barber) => barber.offeredService.any(
+            (service) => service.id == selectedService.id,
+          ),
+        )
         .toList();
   }
 
@@ -68,7 +71,6 @@ class SchedulingController extends ChangeNotifier {
     notifyListeners();
   }
 
-  
   List<String> availableSlots() {
     final List<String> slots = [];
     final now = DateTime.now();
@@ -76,7 +78,6 @@ class SchedulingController extends ChangeNotifier {
 
     while (minutes + selectedService.durationMinutes <=
         selectedBarber.endMinutes) {
-      // DateTime aceita minutos acima de 59: (0h, 570min) vira 09:30.
       final start = DateTime(
         selectedDate.year,
         selectedDate.month,
@@ -117,7 +118,6 @@ class SchedulingController extends ChangeNotifier {
     return false;
   }
 
-  
   Appointment? confirmAppointment() {
     final slot = selectedSlot;
     if (slot == null) {
