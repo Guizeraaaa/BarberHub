@@ -79,6 +79,8 @@ class _AppDateRangerPickerState extends State<AppDateRangerPicker> {
   InputDecoration _decoration(String label) {
     return InputDecoration(
       labelText: label,
+      labelStyle: AppTextStyle.label.copyWith(color: AppColors.black),
+      floatingLabelStyle: AppTextStyle.label.copyWith(color: AppColors.black),
       hintText: 'dd/MM/aaaa',
       errorText: _rangeError,
       errorMaxLines: 2,
@@ -101,6 +103,7 @@ class _AppDateRangerPickerState extends State<AppDateRangerPicker> {
       children: [
         Expanded(
           child: TextFormField(
+            cursorColor: AppColors.grey,
             controller: _startController,
             keyboardType: TextInputType.datetime,
             inputFormatters: const [_DateInputFormatter()],
@@ -112,6 +115,7 @@ class _AppDateRangerPickerState extends State<AppDateRangerPicker> {
         const SizedBox(width: 12),
         Expanded(
           child: TextFormField(
+            cursorColor: AppColors.grey,
             controller: _endController,
             keyboardType: TextInputType.datetime,
             inputFormatters: const [_DateInputFormatter()],

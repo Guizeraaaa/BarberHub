@@ -4,8 +4,16 @@ import 'package:barberhub/shared/models/client.dart';
 import 'package:barberhub/shared/models/barber.dart';
 import 'package:barberhub/shared/models/service.dart';
 import 'package:flutter/material.dart';
+import 'package:barberhub/shared/controllers/appointment_list_controller.dart';
 
 class AppointmentController extends ChangeNotifier {
+AppointmentController(this.appointmentListController);
+
+final AppointmentListController appointmentListController;
+ 
+
+
+
   List<Appointment> appointmentList = [];
   List<AppointmentStatus> selectedStatusList = [
     AppointmentStatus.agendado,
@@ -54,8 +62,7 @@ class AppointmentController extends ChangeNotifier {
     selectedService = '';
     selectedDateRange = null;
 
-    getAppointment();
-    notifyListeners();
+    updateFilters();
   }
 
   void applyFilters({
@@ -78,8 +85,13 @@ class AppointmentController extends ChangeNotifier {
   }
 
   void getAppointment() {
-    appointmentList = mockAppointments.where((item) {
-      return item.client.id == currentClient.id;
+    appointmentList = appointmentListController.appointments.where((item) {
+      return item.client.id == currentClient.id &&
+          selectedStatusList.contains(item.status) &&
+          _isInsideSelectedDateRange(item.dateTime) &&
+          (selectedProfessional == '' ||
+              item.barber.name == selectedProfessional) &&
+          (selectedService == '' || item.service.name == selectedService);
     }).toList();
 
     appointmentList.sort((a, b) {
@@ -114,6 +126,9 @@ class AppointmentController extends ChangeNotifier {
   }
 
   void cancelAppointment(Appointment appointment) {
-    // appointment.status = AppointmentStatus.cancelado;
+  appointment.status = AppointmentStatus.cancelado;
+
+  
+    getAppointment();
   }
 }

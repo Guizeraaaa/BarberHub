@@ -23,10 +23,10 @@ class AppFilterChipStatus extends StatelessWidget {
         width: 100,
         height: 42,
         decoration: BoxDecoration(
-          color: isSelected == true ? AppColors.black : AppColors.white,
+          color: isSelected == true ? AppColors.orangeLigth : AppColors.white,
           borderRadius: BorderRadius.circular(50),
           border: !isSelected
-              ? Border.all(color: AppColors.greyLight, width: 1.5)
+              ? Border.all(color: AppColors.orangeDark, width: 1.5)
               : null,
         ),
         child: Text(
