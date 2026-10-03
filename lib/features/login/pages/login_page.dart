@@ -1,6 +1,8 @@
 import 'package:barberhub/features/login/controllers/login_controller.dart';
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_field.dart';
+import 'package:barberhub/shared/app_text_style.dart';
+import 'package:barberhub/shared/widgets/app_elevated_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,13 +15,14 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.black,
       appBar: AppBar(
         backgroundColor: AppColors.black,
         centerTitle: true,
         title: Text(
           'Login',
-          style: TextStyle(color: AppColors.white, fontSize: 24),
+          style: AppTextStyle.tittle.copyWith(color: AppColors.white),
         ),
       ),
       body: Consumer<LoginController>(
@@ -40,7 +43,7 @@ class LoginPage extends StatelessWidget {
                     children: [
                       Spacer(),
                       Image(
-                        image: AssetImage('assets/images/barberhub.jpg'),
+                        image: AssetImage('assets/images/barberhub_black.png'),
                         height: 300,
                       ),
                       SizedBox(height: 15),
@@ -74,40 +77,27 @@ class LoginPage extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.orangeLigth,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                          ),
+                        child: AppElevatedButton(
+                          backgroundColor: AppColors.orangeLigth,
+                          textButton: 'Login',
+                          textButtonColor: AppColors.orangeDark,
+                          type: ButtonType.filled,
                           onPressed: () {
                             loginController.loginButtonPressed(context);
                           },
-                          child: Text(
-                            'Login',
-                            style: TextStyle(color: AppColors.orangeDark),
-                          ),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.black,
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(color: AppColors.orangeLigth),
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                          ),
+                        child: AppElevatedButton(
+                          backgroundColor: AppColors.black,
+                          textButton: 'Cadastrar',
+                          textButtonColor: AppColors.orangeDark,
+                          type: ButtonType.outlined,
+                          borderColor: AppColors.orangeDark,
                           onPressed: () {
-                            print('abrir pagina de cadastro');
-                            // vai pra signUp page
+                            print('ir para a tela de cadastro');
                           },
-                          child: Text(
-                            'Cadastrar',
-                            style: TextStyle(color: AppColors.orangeLigth),
-                          ),
                         ),
                       ),
 

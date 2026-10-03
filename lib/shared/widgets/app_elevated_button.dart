@@ -11,6 +11,10 @@ class AppElevatedButton extends StatelessWidget {
     required this.type,
     required this.onPressed,
     this.isLoading = false,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.textButtonColor,
+    this.borderColor,
   });
 
   final String textButton;
@@ -18,28 +22,51 @@ class AppElevatedButton extends StatelessWidget {
   final bool isLoading;
   final ButtonType type;
 
+  // Cores opcionais: quem não passar nada fica com o padrão laranja/branco.
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final Color? textButtonColor;
+  final Color? borderColor;
+
+  Color get _backgroundColor {
+    if (backgroundColor != null) {
+      return backgroundColor!;
+    }
+    return type == ButtonType.filled ? AppColors.orangeLigth : AppColors.white;
+  }
+
+  Color get _textColor {
+    if (textButtonColor != null) {
+      return textButtonColor!;
+    }
+    return type == ButtonType.filled ? AppColors.white : AppColors.orangeLigth;
+  }
+
   ButtonStyle _getButtonStyle() {
     switch (type) {
       case ButtonType.filled:
         return ElevatedButton.styleFrom(
-          backgroundColor: AppColors.orangeLigth,
           minimumSize: Size.fromHeight(40),
-          foregroundColor: AppColors.white,
+          foregroundColor: foregroundColor ?? AppColors.white,
+          backgroundColor: _backgroundColor,
           textStyle: AppTextStyle.subTittle,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(25),
           ),
         );
 
       case ButtonType.outlined:
         return ElevatedButton.styleFrom(
-          backgroundColor: AppColors.white,
           minimumSize: Size.fromHeight(40),
-          foregroundColor: AppColors.white,
-          textStyle: AppTextStyle.subTittle.copyWith(color: AppColors.black),
+          foregroundColor: foregroundColor ?? AppColors.white,
+          backgroundColor: _backgroundColor,
+          textStyle: AppTextStyle.subTittle,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-            side: BorderSide(color: AppColors.orangeLigth, width: 2),
+            borderRadius: BorderRadius.circular(25),
+            side: BorderSide(
+              color: borderColor ?? AppColors.orangeLigth,
+              width: 2,
+            ),
           ),
         );
     }
@@ -55,19 +82,13 @@ class AppElevatedButton extends StatelessWidget {
               height: 20,
               width: 20,
               child: CircularProgressIndicator(
-                color: type == ButtonType.filled
-                    ? AppColors.white
-                    : AppColors.orangeLigth,
+                color: _textColor,
                 strokeWidth: 3,
               ),
             )
           : Text(
               textButton,
-              style: type == ButtonType.filled
-                  ? AppTextStyle.subTittle.copyWith(color: AppColors.white)
-                  : AppTextStyle.subTittle.copyWith(
-                      color: AppColors.orangeLigth,
-                    ),
+              style: AppTextStyle.subTittle.copyWith(color: _textColor),
             ),
     );
   }

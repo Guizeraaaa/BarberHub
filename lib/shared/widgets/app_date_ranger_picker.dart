@@ -1,4 +1,3 @@
-import 'package:barberhub/features/scheduling/controllers/scheduling_controller.dart';
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
 import 'package:flutter/material.dart';

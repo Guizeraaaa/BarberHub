@@ -5,9 +5,7 @@ import 'package:barberhub/shared/models/client.dart';
 import 'package:barberhub/shared/models/service.dart';
 import 'package:flutter/material.dart';
 
-// Lista única de agendamentos do app.
-// A tela Agendar adiciona aqui; depois do merge, a tela de Compromissos
-// também vai ler daqui (hoje ela ainda usa os mocks direto).
+
 class AppointmentListController extends ChangeNotifier {
   final List<Appointment> appointments = List.of(mockAppointments);
 
