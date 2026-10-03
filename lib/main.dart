@@ -37,12 +37,15 @@ class MainApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) {
-            return AppointmentController();
+            return AppointmentListController();
           },
         ),
+        // Precisa vir depois do AppointmentListController para conseguir lê-lo.
         ChangeNotifierProvider(
           create: (context) {
-            return AppointmentListController();
+            return AppointmentController(
+              context.read<AppointmentListController>(),
+            );
           },
         ),
         ChangeNotifierProvider(

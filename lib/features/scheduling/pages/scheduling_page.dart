@@ -19,7 +19,7 @@ class SchedulingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const AppHeader(title: 'Agendar'),
+      appBar: const AppHeader(title: 'Agendar', leading: HeaderLeading.back),
       body: Consumer<SchedulingController>(
         builder: (context, schedulingController, child) {
           final service = schedulingController.selectedService;
