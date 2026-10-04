@@ -1,4 +1,4 @@
-import 'package:barberhub/shared/models/Appointment.dart';
+import 'package:barberhub/shared/models/appointment.dart';
 import 'package:barberhub/shared/models/barber.dart';
 import 'package:barberhub/shared/models/client.dart';
 import 'package:barberhub/shared/models/service.dart';
@@ -118,7 +118,6 @@ final List<Client> mockClients = [
     birthDate: DateTime(1997, 4, 8),
   ),
 ];
-
 
 DateTime _dayAt(int daysFromToday, int hour, int minute) {
   final now = DateTime.now();

@@ -21,7 +21,7 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onBellTap;
 
   @override
-  Size get preferredSize => const Size.fromHeight(64);
+  Size get preferredSize => const Size.fromHeight(54);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,6 @@ class AppHeader extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: AppColors.black,
       foregroundColor: AppColors.white,
-      toolbarHeight: 64,
       centerTitle: true,
       title: Text(
         title.toUpperCase(),

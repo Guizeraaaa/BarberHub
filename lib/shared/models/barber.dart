@@ -1,7 +1,7 @@
 import 'package:barberhub/shared/models/service.dart';
 
 import 'user.dart';
-import 'userrole.dart';
+import 'role.dart';
 
 class Barber extends User {
   final List<Service> offeredService;
