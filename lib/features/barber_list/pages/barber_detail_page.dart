@@ -3,7 +3,6 @@ import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
 import 'package:barberhub/shared/models/barber.dart';
 import 'package:barberhub/shared/models/service.dart';
-import 'package:barberhub/shared/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

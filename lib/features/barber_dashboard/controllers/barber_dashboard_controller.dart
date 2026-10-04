@@ -1,10 +1,13 @@
 import 'package:barberhub/features/login/controllers/login_controller.dart';
 import 'package:barberhub/shared/controllers/appointment_list_controller.dart';
-import 'package:barberhub/shared/models/Appointment.dart';
+import 'package:barberhub/shared/models/appointment.dart';
 import 'package:flutter/material.dart';
 
 class BarberDashboardController extends ChangeNotifier {
-  BarberDashboardController(this.appointmentListController, this.loginController);
+  BarberDashboardController(
+    this.appointmentListController,
+    this.loginController,
+  );
 
   final AppointmentListController appointmentListController;
   final LoginController loginController;

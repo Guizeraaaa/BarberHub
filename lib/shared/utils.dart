@@ -1,4 +1,4 @@
-import 'package:barberhub/shared/models/Appointment.dart';
+import 'package:barberhub/shared/models/appointment.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
