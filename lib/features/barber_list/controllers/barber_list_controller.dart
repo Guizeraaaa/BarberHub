@@ -1,4 +1,4 @@
-import 'package:barberhub/shared/mocks/mock_json.dart';
+import 'package:barberhub/shared/mocks/mock.dart';
 import 'package:barberhub/shared/models/barber.dart';
 import 'package:barberhub/shared/models/service.dart';
 import 'package:flutter/material.dart';

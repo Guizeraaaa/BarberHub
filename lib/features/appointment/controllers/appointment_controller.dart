@@ -1,6 +1,6 @@
 import 'package:barberhub/features/login/controllers/login_controller.dart';
 import 'package:barberhub/features/service_list/controllers/service_list_controller.dart';
-import 'package:barberhub/shared/mocks/mock_json.dart';
+import 'package:barberhub/shared/mocks/mock.dart';
 import 'package:barberhub/shared/models/appointment.dart';
 import 'package:barberhub/shared/models/barber.dart';
 import 'package:barberhub/shared/models/service.dart';
