@@ -6,11 +6,18 @@ class AppTextField extends StatefulWidget {
   final String labelText;
   final bool obscureText;
 
+  final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
+  final Color? textColor;
+
   const AppTextField({
     super.key,
     required this.controller,
     required this.labelText,
     this.obscureText = false,
+    this.validator,
+    this.keyboardType,
+    this.textColor,
   });
 
   @override
@@ -20,6 +27,7 @@ class AppTextField extends StatefulWidget {
 class _AppTextFieldState extends State<AppTextField> {
   late bool isObscure;
 
+  @override
   void initState() {
     super.initState();
     isObscure = widget.obscureText;
@@ -31,24 +39,29 @@ class _AppTextFieldState extends State<AppTextField> {
     });
   }
 
+  OutlineInputBorder _border(Color color) {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(25),
+      borderSide: BorderSide(color: color),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       cursorColor: AppColors.orangeDark,
       controller: widget.controller,
       obscureText: isObscure,
-      style: TextStyle(color: AppColors.white),
+      validator: widget.validator,
+      keyboardType: widget.keyboardType,
+      style: TextStyle(color: widget.textColor ?? AppColors.white),
       decoration: InputDecoration(
         labelText: widget.labelText,
         labelStyle: TextStyle(color: AppColors.orangeDark),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25),
-          borderSide: BorderSide(color: AppColors.orangeDark),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25),
-          borderSide: BorderSide(color: AppColors.orangeDark),
-        ),
+        enabledBorder: _border(AppColors.orangeDark),
+        focusedBorder: _border(AppColors.orangeDark),
+        errorBorder: _border(AppColors.red),
+        focusedErrorBorder: _border(AppColors.red),
         suffixIcon: widget.obscureText
             ? IconButton(
                 onPressed: toggleObscure,

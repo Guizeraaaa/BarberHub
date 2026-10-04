@@ -1,18 +1,22 @@
+import 'package:barberhub/features/login/controllers/login_controller.dart';
+import 'package:barberhub/features/service_list/controllers/service_list_controller.dart';
 import 'package:barberhub/shared/mocks/mock_json.dart';
 import 'package:barberhub/shared/models/Appointment.dart';
-import 'package:barberhub/shared/models/client.dart';
 import 'package:barberhub/shared/models/barber.dart';
 import 'package:barberhub/shared/models/service.dart';
 import 'package:flutter/material.dart';
 import 'package:barberhub/shared/controllers/appointment_list_controller.dart';
 
 class AppointmentController extends ChangeNotifier {
-AppointmentController(this.appointmentListController);
+  AppointmentController(
+    this.appointmentListController,
+    this.loginController,
+    this.serviceListController,
+  );
 
-final AppointmentListController appointmentListController;
- 
-
-
+  final AppointmentListController appointmentListController;
+  final LoginController loginController;
+  final ServiceListController serviceListController;
 
   List<Appointment> appointmentList = [];
   List<AppointmentStatus> selectedStatusList = [
@@ -21,13 +25,33 @@ final AppointmentListController appointmentListController;
     AppointmentStatus.concluido,
   ];
   List<Barber> professionalsList = mockBarbers;
-  List<Service> servicesList = mockServices;
 
-  Client currentClient = mockClients[1];
+  List<Service> get servicesList => serviceListController.servicesList;
+
+  bool get isBarber => loginController.isBarber;
 
   String selectedProfessional = '';
   String selectedService = '';
   DateTimeRange<DateTime>? selectedDateRange;
+
+  void loadAppointments() {
+    selectedStatusList = [
+      AppointmentStatus.agendado,
+      AppointmentStatus.cancelado,
+      AppointmentStatus.concluido,
+    ];
+    selectedProfessional = '';
+    selectedService = '';
+
+    if (isBarber) {
+      final today = DateUtils.dateOnly(DateTime.now());
+      selectedDateRange = DateTimeRange(start: today, end: today);
+    } else {
+      selectedDateRange = null;
+    }
+
+    getAppointment();
+  }
 
   void changeSelectedProfessional(String value) {
     selectedProfessional = value;
@@ -84,9 +108,23 @@ final AppointmentListController appointmentListController;
     notifyListeners();
   }
 
+  bool _belongsToCurrentUser(Appointment item) {
+    final barber = loginController.currentBarber;
+    if (barber != null) {
+      return item.barber.id == barber.id;
+    }
+
+    final client = loginController.currentClient;
+    if (client != null) {
+      return item.client.id == client.id;
+    }
+
+    return false;
+  }
+
   void getAppointment() {
     appointmentList = appointmentListController.appointments.where((item) {
-      return item.client.id == currentClient.id &&
+      return _belongsToCurrentUser(item) &&
           selectedStatusList.contains(item.status) &&
           _isInsideSelectedDateRange(item.dateTime) &&
           (selectedProfessional == '' ||
@@ -125,10 +163,22 @@ final AppointmentListController appointmentListController;
     return !date.isBefore(start) && date.isBefore(endExclusive);
   }
 
-  void cancelAppointment(Appointment appointment) {
-  appointment.status = AppointmentStatus.cancelado;
+  bool canCancel(Appointment appointment) {
+    return appointment.status == AppointmentStatus.agendado &&
+        appointment.dateTime.isAfter(DateTime.now());
+  }
 
-  
+  bool canComplete(Appointment appointment) {
+    return isBarber && appointment.status == AppointmentStatus.agendado;
+  }
+
+  void cancelAppointment(Appointment appointment) {
+    appointment.status = AppointmentStatus.cancelado;
+    getAppointment();
+  }
+
+  void completeAppointment(Appointment appointment) {
+    appointment.status = AppointmentStatus.concluido;
     getAppointment();
   }
 }

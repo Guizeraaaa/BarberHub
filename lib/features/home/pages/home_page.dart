@@ -1,5 +1,7 @@
 import 'package:barberhub/features/appointment/pages/appointment_page.dart';
+import 'package:barberhub/features/barber_dashboard/pages/barber_dashboard_page.dart';
 import 'package:barberhub/features/barber_list/pages/barber_list_page.dart';
+import 'package:barberhub/features/login/controllers/login_controller.dart';
 import 'package:barberhub/features/login/pages/login_page.dart';
 import 'package:barberhub/features/scheduling/pages/scheduling_page.dart';
 import 'package:barberhub/features/service_list/pages/service_list_page.dart';
@@ -23,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final themeController = context.watch<ThemeController>();
+    final isBarber = context.watch<LoginController>().isBarber;
     return Scaffold(
       appBar: AppBar(centerTitle: true, title: Text('Home')),
       drawer: Drawer(
@@ -61,7 +64,6 @@ class _HomePageState extends State<HomePage> {
                     leading: Icon(Icons.person),
                     title: Text('Perfil'),
                     onTap: () {
-                      // Navigator.pushNamed(context, '/perfil');
                     },
                   ),
                   ListTile(
@@ -76,7 +78,6 @@ class _HomePageState extends State<HomePage> {
                     leading: Icon(Icons.question_mark),
                     title: Text('Quem somos?'),
                     onTap: () {
-                      // Navigator.pushNamed(context, '/sobre');
                     },
                   ),
 
@@ -84,7 +85,6 @@ class _HomePageState extends State<HomePage> {
                     leading: Icon(Icons.location_on),
                     title: Text('Localização'),
                     onTap: () {
-                      // Navigator.pushNamed(context, '/loc');
                     },
                   ),
                 ],
@@ -95,6 +95,7 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(8.0),
               child: TextButton(
                 onPressed: () {
+                  context.read<LoginController>().logout();
                   Navigator.pushNamedAndRemoveUntil(
                     context,
                     LoginPage.route,
@@ -138,16 +139,23 @@ class _HomePageState extends State<HomePage> {
                                   onTap: () {
                                     Navigator.pushNamed(
                                       context,
-                                      SchedulingPage.route,
+                                      isBarber
+                                          ? BarberDashboardPage.route
+                                          : SchedulingPage.route,
                                     );
                                   },
-                                  child: Icon(Icons.calendar_month, size: 50),
+                                  child: Icon(
+                                    isBarber
+                                        ? Icons.bar_chart
+                                        : Icons.calendar_month,
+                                    size: 50,
+                                  ),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
-                                  'Agendar',
+                                  isBarber ? 'Painel' : 'Agendar',
                                   style: AppTextStyle.bodyHome,
                                   textAlign: TextAlign.center,
                                 ),
@@ -171,16 +179,12 @@ class _HomePageState extends State<HomePage> {
                                     );
                                   },
                                   child: Icon(Icons.event_note, size: 50),
-                                  // Image.asset(
-                                  //   'assets/images/localizacao.png',
-                                  //   fit: BoxFit.contain,
-                                  // ),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
-                                  'Compromissos',
+                                  isBarber ? 'Atendimentos' : 'Compromissos',
                                   style: AppTextStyle.bodyHome,
                                   textAlign: TextAlign.center,
                                 ),

@@ -3,7 +3,6 @@ import 'package:barberhub/shared/models/barber.dart';
 import 'package:barberhub/shared/models/client.dart';
 import 'package:barberhub/shared/models/service.dart';
 
-// ========== SERVICES ==========
 final List<Service> mockServices = [
   Service(id: 's1', name: 'Corte', price: 45.0, durationMinutes: 30),
   Service(id: 's2', name: 'Barba', price: 35.0, durationMinutes: 30),
@@ -12,7 +11,6 @@ final List<Service> mockServices = [
   Service(id: 's5', name: 'Pezinho', price: 15.0, durationMinutes: 15),
 ];
 
-// ========== BARBERS ==========
 final List<Barber> mockBarbers = [
   Barber(
     id: 'b1',
@@ -31,8 +29,8 @@ final List<Barber> mockBarbers = [
       ),
       Service(id: 's5', name: 'Pezinho', price: 15.0, durationMinutes: 15),
     ],
-    startMinutes: 540, // 09:00
-    endMinutes: 1080, // 18:00
+    startMinutes: 540,
+    endMinutes: 1080,
   ),
   Barber(
     id: 'b2',
@@ -51,8 +49,8 @@ final List<Barber> mockBarbers = [
       ),
       Service(id: 's4', name: 'Sobrancelha', price: 20.0, durationMinutes: 15),
     ],
-    startMinutes: 600, // 10:00
-    endMinutes: 1140, // 19:00
+    startMinutes: 600,
+    endMinutes: 1140,
   ),
   Barber(
     id: 'b3',
@@ -71,12 +69,11 @@ final List<Barber> mockBarbers = [
       Service(id: 's4', name: 'Sobrancelha', price: 20.0, durationMinutes: 15),
       Service(id: 's5', name: 'Pezinho', price: 15.0, durationMinutes: 15),
     ],
-    startMinutes: 540, // 09:00
-    endMinutes: 1020, // 17:00
+    startMinutes: 540,
+    endMinutes: 1020,
   ),
 ];
 
-// ========== CLIENTS ==========
 final List<Client> mockClients = [
   Client(
     id: 'u1',
@@ -122,10 +119,6 @@ final List<Client> mockClients = [
   ),
 ];
 
-// ========== DATE HELPER ==========
-// _dayAt(-1, 16, 0) = ontem às 16:00.
-// Assim os mocks sempre terão passado, hoje e futuro,
-// independentemente do dia em que o app for executado.
 
 DateTime _dayAt(int daysFromToday, int hour, int minute) {
   final now = DateTime.now();
@@ -133,9 +126,7 @@ DateTime _dayAt(int daysFromToday, int hour, int minute) {
   return DateTime(now.year, now.month, now.day + daysFromToday, hour, minute);
 }
 
-// ========== APPOINTMENTS ==========
 final List<Appointment> mockAppointments = [
-  // ---------- Passado ----------
   Appointment(
     id: 'a1',
     client: mockClients[0],
@@ -172,8 +163,6 @@ final List<Appointment> mockAppointments = [
     status: AppointmentStatus.concluido,
   ),
 
-  // Passado e ainda "agendado":
-  // serve para testar o bloqueio de edição.
   Appointment(
     id: 'a5',
     client: mockClients[3],
@@ -183,7 +172,6 @@ final List<Appointment> mockAppointments = [
     status: AppointmentStatus.agendado,
   ),
 
-  // ---------- Hoje ----------
   Appointment(
     id: 'a6',
     client: mockClients[5],
@@ -202,8 +190,6 @@ final List<Appointment> mockAppointments = [
     status: AppointmentStatus.agendado,
   ),
 
-  // ---------- Futuro ----------
-  // Mesmo horário, barbeiros diferentes -> válido.
   Appointment(
     id: 'a8',
     client: mockClients[2],
@@ -231,8 +217,6 @@ final List<Appointment> mockAppointments = [
     status: AppointmentStatus.agendado,
   ),
 
-  // Cancelado no futuro:
-  // não deve aparecer em "próximos agendamentos".
   Appointment(
     id: 'a11',
     client: mockClients[0],

@@ -21,7 +21,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<AppointmentController>().getAppointment();
+      context.read<AppointmentController>().loadAppointments();
     });
   }
 
@@ -35,7 +35,9 @@ class _AppointmentPageState extends State<AppointmentPage> {
             backgroundColor: AppColors.black,
             centerTitle: true,
             title: Text(
-              'COMPROMISSOS',
+              appointmentController.isBarber
+                  ? 'MEUS ATENDIMENTOS'
+                  : 'COMPROMISSOS',
               style: AppTextStyle.tittle.copyWith(color: AppColors.white),
             ),
             actions: [
@@ -86,6 +88,17 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
+                    if (appointmentController.appointmentList.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40),
+                        child: Text(
+                          'Nenhum compromisso encontrado.\nUse o filtro para ver outros períodos.',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyle.subTittle.copyWith(
+                            color: AppColors.grey,
+                          ),
+                        ),
+                      ),
                     ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
@@ -95,11 +108,18 @@ class _AppointmentPageState extends State<AppointmentPage> {
                             appointmentController.appointmentList[index];
                         return AppointmentCard(
                           appointment: appointment,
-                          cancelAppointment: () {
-                            appointmentController.cancelAppointment(
-                              appointmentController.appointmentList[index],
-                            );
-                          },
+                          showClientName: appointmentController.isBarber,
+                          cancelAppointment:
+                              appointmentController.canCancel(appointment)
+                              ? () => appointmentController.cancelAppointment(
+                                  appointment,
+                                )
+                              : null,
+                          completeAppointment:
+                              appointmentController.canComplete(appointment)
+                              ? () => appointmentController
+                                    .completeAppointment(appointment)
+                              : null,
                         );
                       },
                     ),

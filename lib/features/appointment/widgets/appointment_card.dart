@@ -11,7 +11,9 @@ class AppointmentCard extends StatelessWidget {
   const AppointmentCard({
     super.key,
     required this.appointment,
-    required this.cancelAppointment,
+    this.cancelAppointment,
+    this.completeAppointment,
+    this.showClientName = false,
   });
 
   final Appointment appointment;
@@ -23,7 +25,10 @@ class AppointmentCard extends StatelessWidget {
     return CardType.finishied;
   }
 
-  final VoidCallback cancelAppointment;
+  final VoidCallback? cancelAppointment;
+  final VoidCallback? completeAppointment;
+
+  final bool showClientName;
 
   BoxDecoration _getCardStyle() {
     switch (type) {
@@ -148,15 +153,49 @@ class AppointmentCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      appointment.barber.name,
+                      showClientName
+                          ? appointment.client.name
+                          : appointment.barber.name,
                       style: AppTextStyle.subTittle.copyWith(
                         color: AppColors.grey,
                       ),
                     ),
                   ],
                 ),
-                type == CardType.scheduled
-                    ? IconButton(
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (completeAppointment != null)
+                      IconButton(
+                        tooltip: 'Concluir',
+                        onPressed: () async {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AppConfirmationDialog(
+                              title: 'Concluir atendimento?',
+                              content:
+                                  'O atendimento será marcado como concluído.',
+                              icon: Icon(
+                                Icons.check_circle,
+                                size: 100,
+                                color: AppColors.orangeLigth,
+                              ),
+                              labelCancel: 'Voltar',
+                              labelConfirm: 'Concluir',
+                            ),
+                          );
+                          if (confirm == true) {
+                            completeAppointment!();
+                          }
+                        },
+                        icon: Icon(
+                          Icons.check_circle_outline,
+                          color: AppColors.orangeLigth,
+                        ),
+                      ),
+                    if (cancelAppointment != null)
+                      IconButton(
+                        tooltip: 'Cancelar',
                         onPressed: () async {
                           final exclude = await showDialog<bool>(
                             context: context,
@@ -174,12 +213,13 @@ class AppointmentCard extends StatelessWidget {
                             ),
                           );
                           if (exclude == true) {
-                            cancelAppointment();
+                            cancelAppointment!();
                           }
                         },
                         icon: Icon(Icons.delete, color: AppColors.orangeLigth),
-                      )
-                    : SizedBox.shrink(),
+                      ),
+                  ],
+                ),
               ],
             ),
           ],
