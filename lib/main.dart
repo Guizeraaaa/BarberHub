@@ -1,4 +1,5 @@
 import 'package:barberhub/features/appointment/controllers/appointment_controller.dart';
+import 'package:barberhub/features/barber_dashboard/controllers/barber_dashboard_controller.dart';
 import 'package:barberhub/features/barber_list/controllers/barber_list_controller.dart';
 import 'package:barberhub/features/login/controllers/login_controller.dart';
 import 'package:barberhub/features/login/pages/login_page.dart';
@@ -40,11 +41,18 @@ class MainApp extends StatelessWidget {
             return AppointmentListController();
           },
         ),
-        // Precisa vir depois do AppointmentListController para conseguir lê-lo.
+        ChangeNotifierProvider(
+          create: (context) {
+            return ServiceListController();
+          },
+        ),
+       
         ChangeNotifierProvider(
           create: (context) {
             return AppointmentController(
               context.read<AppointmentListController>(),
+              context.read<LoginController>(),
+              context.read<ServiceListController>(),
             );
           },
         ),
@@ -52,12 +60,17 @@ class MainApp extends StatelessWidget {
           create: (context) {
             return SchedulingController(
               context.read<AppointmentListController>(),
+              context.read<LoginController>(),
+              context.read<ServiceListController>(),
             );
           },
         ),
         ChangeNotifierProvider(
           create: (context) {
-            return ServiceListController();
+            return BarberDashboardController(
+              context.read<AppointmentListController>(),
+              context.read<LoginController>(),
+            );
           },
         ),
         ChangeNotifierProvider(

@@ -1,24 +1,29 @@
+import 'package:barberhub/features/login/controllers/login_controller.dart';
+import 'package:barberhub/features/service_list/controllers/service_list_controller.dart';
 import 'package:barberhub/shared/controllers/appointment_list_controller.dart';
 import 'package:barberhub/shared/mocks/mock_json.dart';
 import 'package:barberhub/shared/models/Appointment.dart';
 import 'package:barberhub/shared/models/barber.dart';
-import 'package:barberhub/shared/models/client.dart';
 import 'package:barberhub/shared/models/service.dart';
 import 'package:barberhub/shared/utils.dart';
 import 'package:flutter/material.dart';
 
 class SchedulingController extends ChangeNotifier {
-  SchedulingController(this.appointmentListController);
+  SchedulingController(
+    this.appointmentListController,
+    this.loginController,
+    this.serviceListController,
+  );
 
   final AppointmentListController appointmentListController;
-
-  Client currentClient = mockClients[1];
+  final LoginController loginController;
+  final ServiceListController serviceListController;
 
   final int slotStepMinutes = 30;
 
   final int maxDaysAhead = 30;
 
-  List<Service> servicesList = mockServices;
+  List<Service> get servicesList => serviceListController.servicesList;
   List<Barber> barbersList = mockBarbers;
 
   Service selectedService = mockServices[0];
@@ -46,7 +51,7 @@ class SchedulingController extends ChangeNotifier {
     selectedService = service;
 
     final barbers = barbersForSelectedService();
-    if (!barbers.contains(selectedBarber)) {
+    if (barbers.isNotEmpty && !barbers.contains(selectedBarber)) {
       selectedBarber = barbers.first;
     }
 
@@ -120,12 +125,13 @@ class SchedulingController extends ChangeNotifier {
 
   Appointment? confirmAppointment() {
     final slot = selectedSlot;
-    if (slot == null) {
+    final client = loginController.currentClient;
+    if (slot == null || client == null) {
       return null;
     }
 
     final appointment = appointmentListController.createAppointment(
-      client: currentClient,
+      client: client,
       barber: selectedBarber,
       service: selectedService,
       dateTime: slotToDateTime(slot),

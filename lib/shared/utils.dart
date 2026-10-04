@@ -39,7 +39,7 @@ class Utils {
     return switch (status) {
       AppointmentStatus.agendado => 'Agendado',
       AppointmentStatus.cancelado => 'Cancelado',
-      AppointmentStatus.concluido => 'Finalizado',
+      AppointmentStatus.concluido => 'Concluído',
     };
   }
 }

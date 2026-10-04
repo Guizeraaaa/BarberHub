@@ -22,7 +22,6 @@ class AppElevatedButton extends StatelessWidget {
   final bool isLoading;
   final ButtonType type;
 
-  // Cores opcionais: quem não passar nada fica com o padrão laranja/branco.
   final Color? backgroundColor;
   final Color? foregroundColor;
   final Color? textButtonColor;
