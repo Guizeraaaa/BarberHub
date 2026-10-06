@@ -1,8 +1,10 @@
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
-import 'package:barberhub/shared/models/Appointment.dart';
+import 'package:barberhub/shared/models/appointment.dart';
 import 'package:barberhub/shared/utils.dart';
 import 'package:flutter/material.dart';
+
+import '../../../shared/widgets/app_confirmation_dialog.dart';
 
 enum CardType { scheduled, finishied }
 
@@ -10,7 +12,9 @@ class AppointmentCard extends StatelessWidget {
   const AppointmentCard({
     super.key,
     required this.appointment,
-    required this.cancelAppointment,
+    this.cancelAppointment,
+    this.completeAppointment,
+    this.showClientName = false,
   });
 
   final Appointment appointment;
@@ -22,7 +26,10 @@ class AppointmentCard extends StatelessWidget {
     return CardType.finishied;
   }
 
-  final VoidCallback cancelAppointment;
+  final VoidCallback? cancelAppointment;
+  final VoidCallback? completeAppointment;
+
+  final bool showClientName;
 
   BoxDecoration _getCardStyle() {
     switch (type) {
@@ -147,69 +154,73 @@ class AppointmentCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      appointment.barber.name,
+                      showClientName
+                          ? appointment.client.name
+                          : appointment.barber.name,
                       style: AppTextStyle.subTittle.copyWith(
                         color: AppColors.grey,
                       ),
                     ),
                   ],
                 ),
-                type == CardType.scheduled
-                    ? IconButton(
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (completeAppointment != null)
+                      IconButton(
+                        tooltip: 'Concluir',
+                        onPressed: () async {
+                          final confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AppConfirmationDialog(
+                              title: 'Concluir atendimento?',
+                              content:
+                                  'O atendimento será marcado como concluído.',
+                              icon: Icon(
+                                Icons.check_circle,
+                                size: 100,
+                                color: AppColors.orangeLigth,
+                              ),
+                              labelCancel: 'Voltar',
+                              labelConfirm: 'Concluir',
+                            ),
+                          );
+                          if (confirm == true) {
+                            completeAppointment!();
+                          }
+                        },
+                        icon: Icon(
+                          Icons.check_circle_outline,
+                          color: AppColors.orangeLigth,
+                        ),
+                      ),
+                    if (cancelAppointment != null)
+                      IconButton(
+                        tooltip: 'Cancelar',
                         onPressed: () async {
                           final exclude = await showDialog<bool>(
                             context: context,
-                            builder: (context) => AlertDialog(
-                              backgroundColor: AppColors.white,
+                            builder: (context) => AppConfirmationDialog(
+                              title: 'Cancelar Agendamento?',
+                              content:
+                                  'Deseja cancelar o agendamento? Essa ação não pode ser desfeita. Volte a tela de "Agendar" para agendar um novo serviço.',
                               icon: Icon(
                                 Icons.delete,
                                 size: 100,
                                 color: AppColors.orangeLigth,
                               ),
-                              title: Text(
-                                'Cancelar Agendamento?',
-                                style: AppTextStyle.tittle.copyWith(
-                                  color: AppColors.orangeLigth,
-                                ),
-                              ),
-                              content: Text(
-                                'Deseja cancelar o agendamento? Essa ação não pode ser desfeita. Volte a tela de "Agendar" para agendar um novo serviço.',
-                                style: AppTextStyle.label.copyWith(
-                                  color: AppColors.grey,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              actions: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, false);
-                                        },
-                                        child: Text('Voltar'),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, true);
-                                        },
-                                        child: Text('Cancelar'),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                              labelCancel: 'Voltar',
+                              labelConfirm: 'Cancelar',
                             ),
                           );
                           if (exclude == true) {
-                            cancelAppointment();
+                            cancelAppointment!();
                           }
                         },
                         icon: Icon(Icons.delete, color: AppColors.orangeLigth),
-                      )
-                    : SizedBox.shrink(),
+                      ),
+                  ],
+                ),
               ],
             ),
           ],

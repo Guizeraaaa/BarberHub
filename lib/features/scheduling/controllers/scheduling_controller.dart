@@ -1,29 +1,29 @@
+import 'package:barberhub/features/login/controllers/login_controller.dart';
+import 'package:barberhub/features/service_list/controllers/service_list_controller.dart';
 import 'package:barberhub/shared/controllers/appointment_list_controller.dart';
-import 'package:barberhub/shared/mocks/mock_json.dart';
-import 'package:barberhub/shared/models/Appointment.dart';
+import 'package:barberhub/shared/mocks/mock.dart';
+import 'package:barberhub/shared/models/appointment.dart';
 import 'package:barberhub/shared/models/barber.dart';
-import 'package:barberhub/shared/models/client.dart';
 import 'package:barberhub/shared/models/service.dart';
 import 'package:barberhub/shared/utils.dart';
 import 'package:flutter/material.dart';
 
 class SchedulingController extends ChangeNotifier {
-  SchedulingController(this.appointmentListController);
+  SchedulingController(
+    this.appointmentListController,
+    this.loginController,
+    this.serviceListController,
+  );
 
-  // Lista compartilhada: é aqui que o novo agendamento é salvo.
   final AppointmentListController appointmentListController;
+  final LoginController loginController;
+  final ServiceListController serviceListController;
 
-  // Mesmo usuário fixo do AppointmentController do Lucas (mockClients[1] = 'u2'),
-  // até o login guardar quem está logado.
-  Client currentClient = mockClients[1];
-
-  // Distância entre um horário e o próximo na grade (09:00, 09:30, ...).
   final int slotStepMinutes = 30;
 
-  // Até quantos dias pra frente o cliente pode agendar.
   final int maxDaysAhead = 30;
 
-  List<Service> servicesList = mockServices;
+  List<Service> get servicesList => serviceListController.servicesList;
   List<Barber> barbersList = mockBarbers;
 
   Service selectedService = mockServices[0];
@@ -37,11 +37,12 @@ class SchedulingController extends ChangeNotifier {
 
   bool get canConfirm => selectedSlot != null;
 
-  // Só os barbeiros que fazem o serviço escolhido.
   List<Barber> barbersForSelectedService() {
     return barbersList
         .where(
-          (barber) => barber.offeredServiceIds.contains(selectedService.id),
+          (barber) => barber.offeredService.any(
+            (service) => service.id == selectedService.id,
+          ),
         )
         .toList();
   }
@@ -49,9 +50,8 @@ class SchedulingController extends ChangeNotifier {
   void selectService(Service service) {
     selectedService = service;
 
-    // Se o barbeiro atual não faz esse serviço, troca pelo primeiro que faz.
     final barbers = barbersForSelectedService();
-    if (!barbers.contains(selectedBarber)) {
+    if (barbers.isNotEmpty && !barbers.contains(selectedBarber)) {
       selectedBarber = barbers.first;
     }
 
@@ -76,11 +76,6 @@ class SchedulingController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Monta os horários livres do barbeiro no dia escolhido.
-  // Um horário entra na lista quando:
-  // - o serviço inteiro cabe antes do fim do expediente;
-  // - ainda não passou (para o dia de hoje);
-  // - não bate com outro agendamento do mesmo barbeiro.
   List<String> availableSlots() {
     final List<String> slots = [];
     final now = DateTime.now();
@@ -88,7 +83,6 @@ class SchedulingController extends ChangeNotifier {
 
     while (minutes + selectedService.durationMinutes <=
         selectedBarber.endMinutes) {
-      // DateTime aceita minutos acima de 59: (0h, 570min) vira 09:30.
       final start = DateTime(
         selectedDate.year,
         selectedDate.month,
@@ -120,7 +114,6 @@ class SchedulingController extends ChangeNotifier {
           Duration(minutes: appointment.service.durationMinutes),
         );
 
-        // Dois horários se chocam quando um começa antes do outro terminar.
         if (start.isBefore(appointmentEnd) && appointmentStart.isBefore(end)) {
           return true;
         }
@@ -130,16 +123,15 @@ class SchedulingController extends ChangeNotifier {
     return false;
   }
 
-  // Salva o agendamento na lista compartilhada e limpa o horário escolhido.
-  // Devolve o agendamento criado (ou null se nenhum horário foi escolhido).
   Appointment? confirmAppointment() {
     final slot = selectedSlot;
-    if (slot == null) {
+    final client = loginController.currentClient;
+    if (slot == null || client == null) {
       return null;
     }
 
     final appointment = appointmentListController.createAppointment(
-      client: currentClient,
+      client: client,
       barber: selectedBarber,
       service: selectedService,
       dateTime: slotToDateTime(slot),
@@ -150,7 +142,6 @@ class SchedulingController extends ChangeNotifier {
     return appointment;
   }
 
-  // '10:30' -> selectedDate às 10:30
   DateTime slotToDateTime(String slot) {
     final parts = slot.split(':');
     final hour = int.parse(parts[0]);

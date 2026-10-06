@@ -1,10 +1,11 @@
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
-import 'package:barberhub/shared/models/Appointment.dart';
+import 'package:barberhub/shared/models/appointment.dart';
 import 'package:barberhub/shared/models/barber.dart';
 import 'package:barberhub/shared/models/service.dart';
 import 'package:barberhub/shared/utils.dart';
 import 'package:barberhub/shared/widgets/app_dropdown_button_form_field.dart';
+import 'package:barberhub/shared/widgets/app_elevated_button.dart';
 import 'package:barberhub/shared/widgets/app_filter_chip_status.dart';
 import 'package:flutter/material.dart';
 
@@ -71,7 +72,7 @@ class _AppFilterDialogState<T> extends State<AppFilterDialog<T>> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      insetPadding: EdgeInsets.all(20),
+      insetPadding: EdgeInsets.all(10),
       child: Container(
         width: double.infinity,
         height: 600,
@@ -87,7 +88,7 @@ class _AppFilterDialogState<T> extends State<AppFilterDialog<T>> {
                 width: double.infinity,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: AppColors.black,
+                  color: AppColors.orangeLigth,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 ),
                 child: Padding(
@@ -223,21 +224,21 @@ class _AppFilterDialogState<T> extends State<AppFilterDialog<T>> {
                     ),
 
                     Row(
+                      spacing: 10,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: ElevatedButton(
-                            style: ButtonStyle(),
+                          child: AppElevatedButton(
                             onPressed: () {
                               widget.onClear();
                               Navigator.pop(context);
                             },
-                            child: Text('Limpar'),
+                            textButton: 'Limpar',
+                            type: ButtonType.outlined,
                           ),
                         ),
                         Expanded(
-                          child: ElevatedButton(
-                            style: ButtonStyle(),
+                          child: AppElevatedButton(
                             onPressed: () {
                               widget.onApply(
                                 statusList: List.of(_selectedStatusList),
@@ -247,7 +248,8 @@ class _AppFilterDialogState<T> extends State<AppFilterDialog<T>> {
                               );
                               Navigator.pop(context, true);
                             },
-                            child: Text('Aplicar'),
+                            textButton: 'Aplicar',
+                            type: ButtonType.filled,
                           ),
                         ),
                       ],

@@ -1,4 +1,4 @@
-import 'package:barberhub/shared/models/Appointment.dart';
+import 'package:barberhub/shared/models/appointment.dart';
 import 'package:intl/intl.dart';
 
 class Utils {
@@ -39,7 +39,7 @@ class Utils {
     return switch (status) {
       AppointmentStatus.agendado => 'Agendado',
       AppointmentStatus.cancelado => 'Cancelado',
-      AppointmentStatus.concluido => 'Finalizado',
+      AppointmentStatus.concluido => 'Concluído',
     };
   }
 }

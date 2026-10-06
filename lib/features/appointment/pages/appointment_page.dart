@@ -2,7 +2,7 @@ import 'package:barberhub/features/appointment/controllers/appointment_controlle
 import 'package:barberhub/features/appointment/widgets/appointment_card.dart';
 import 'package:barberhub/shared/app_colors.dart';
 import 'package:barberhub/shared/app_text_style.dart';
-import 'package:barberhub/shared/models/Appointment.dart';
+import 'package:barberhub/shared/models/appointment.dart';
 import 'package:barberhub/shared/widgets/app_filter_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,25 +21,27 @@ class _AppointmentPageState extends State<AppointmentPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<AppointmentController>().getAppointment();
+      context.read<AppointmentController>().loadAppointments();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.black,
-        centerTitle: true,
-        title: Text(
-          'COMPROMISSOS',
-          style: AppTextStyle.tittle.copyWith(color: AppColors.white),
-        ),
-        actions: [
-          Consumer<AppointmentController>(
-            builder: (context, appointmentController, child) {
-              return IconButton(
+    return Consumer<AppointmentController>(
+      builder: (context, appointmentController, child) {
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          appBar: AppBar(
+            backgroundColor: AppColors.black,
+            centerTitle: true,
+            title: Text(
+              appointmentController.isBarber
+                  ? 'MEUS ATENDIMENTOS'
+                  : 'COMPROMISSOS',
+              style: AppTextStyle.tittle.copyWith(color: AppColors.white),
+            ),
+            actions: [
+              IconButton(
                 onPressed: () async {
                   await showDialog<bool>(
                     context: context,
@@ -76,42 +78,59 @@ class _AppointmentPageState extends State<AppointmentPage> {
                         ),
                   );
                 },
-                icon: Icon(Icons.filter_list, color: AppColors.white),
-              );
-            },
+                icon: Icon(Icons.filter_list, color: AppColors.orangeLigth),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: Consumer<AppointmentController>(
-        builder: (context, appointmentController, child) {
-          return SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    if (appointmentController.appointmentList.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40),
+                        child: Text(
+                          'Nenhum compromisso encontrado.\nUse o filtro para ver outros períodos.',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyle.subTittle.copyWith(
+                            color: AppColors.grey,
+                          ),
+                        ),
+                      ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
                       itemCount: appointmentController.appointmentList.length,
                       itemBuilder: (context, index) {
                         Appointment appointment =
                             appointmentController.appointmentList[index];
                         return AppointmentCard(
                           appointment: appointment,
-                          cancelAppointment: () {
-                            appointmentController.cancelAppointment(
-                              appointmentController.appointmentList[index],
-                            );
-                          },
+                          showClientName: appointmentController.isBarber,
+                          cancelAppointment:
+                              appointmentController.canCancel(appointment)
+                              ? () => appointmentController.cancelAppointment(
+                                  appointment,
+                                )
+                              : null,
+                          completeAppointment:
+                              appointmentController.canComplete(appointment)
+                              ? () => appointmentController.completeAppointment(
+                                  appointment,
+                                )
+                              : null,
                         );
                       },
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

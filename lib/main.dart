@@ -1,9 +1,14 @@
-import 'package:barberhub/features/login/controllers/login_controller.dart';
 import 'package:barberhub/features/appointment/controllers/appointment_controller.dart';
+import 'package:barberhub/features/barber_dashboard/controllers/barber_dashboard_controller.dart';
+import 'package:barberhub/features/barber_list/controllers/barber_list_controller.dart';
+import 'package:barberhub/features/login/controllers/login_controller.dart';
+import 'package:barberhub/features/login/pages/login_page.dart';
 import 'package:barberhub/features/scheduling/controllers/scheduling_controller.dart';
-import 'package:barberhub/features/scheduling/pages/scheduling_page.dart';
-import 'package:barberhub/shared/controllers/appointment_list_controller.dart';
+import 'package:barberhub/features/service_list/controllers/service_list_controller.dart';
+import 'package:barberhub/features/theme/app_theme.dart';
+import 'package:barberhub/features/theme/theme_controller.dart';
 import 'package:barberhub/routes.dart';
+import 'package:barberhub/shared/controllers/appointment_list_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -33,26 +38,63 @@ class MainApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) {
-            return AppointmentController();
+            return AppointmentListController();
           },
         ),
         ChangeNotifierProvider(
           create: (context) {
-            return AppointmentListController();
+            return ServiceListController();
+          },
+        ),
+       
+        ChangeNotifierProvider(
+          create: (context) {
+            return AppointmentController(
+              context.read<AppointmentListController>(),
+              context.read<LoginController>(),
+              context.read<ServiceListController>(),
+            );
           },
         ),
         ChangeNotifierProvider(
           create: (context) {
             return SchedulingController(
               context.read<AppointmentListController>(),
+              context.read<LoginController>(),
+              context.read<ServiceListController>(),
             );
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return BarberDashboardController(
+              context.read<AppointmentListController>(),
+              context.read<LoginController>(),
+            );
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return BarberListController();
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return ThemeController();
           },
         ),
       ],
       builder: (context, child) {
+        final themeController = context.watch<ThemeController>();
+
         return MaterialApp(
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: themeController.darkMode
+              ? ThemeMode.dark
+              : ThemeMode.light,
           routes: AppRoutes.routes,
-          initialRoute: SchedulingPage.route,
+          initialRoute: LoginPage.route,
           locale: const Locale('pt', 'BR'),
           supportedLocales: const [Locale('pt', 'BR')],
           localizationsDelegates: const [

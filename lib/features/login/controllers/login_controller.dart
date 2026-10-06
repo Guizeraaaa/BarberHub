@@ -1,7 +1,8 @@
-import 'package:barberhub/shared/mocks/mock_json.dart';
+import 'package:barberhub/features/home/pages/home_page.dart';
+import 'package:barberhub/shared/mocks/mock.dart';
+import 'package:barberhub/shared/models/barber.dart';
+import 'package:barberhub/shared/models/client.dart';
 import 'package:flutter/material.dart';
-
-enum UserType { client, barber }
 
 class LoginController extends ChangeNotifier {
   final int _passwordMinimumLength = 6;
@@ -11,42 +12,54 @@ class LoginController extends ChangeNotifier {
 
   final GlobalKey<FormState> key = GlobalKey<FormState>();
 
+  Client? currentClient;
+  Barber? currentBarber;
+
+  bool get isBarber => currentBarber != null;
+
   bool get isPasswordValid =>
       passwordController.text.length >= _passwordMinimumLength;
 
   bool get isEmailValid => _emailRegex.hasMatch(emailController.text);
 
-  UserType? login() {
+  bool login() {
+    currentClient = null;
+    currentBarber = null;
+
     for (final client in mockClients) {
       if (client.email == emailController.text &&
           client.password == passwordController.text) {
-        return UserType.client;
+        currentClient = client;
+        return true;
       }
     }
     for (final barber in mockBarbers) {
       if (barber.email == emailController.text &&
           barber.password == passwordController.text) {
-        return UserType.barber;
+        currentBarber = barber;
+        return true;
       }
     }
-    return null;
+    return false;
   }
 
   void loginButtonPressed(BuildContext context) {
     if (key.currentState!.validate()) {
-      final userType = login();
-      if (userType == UserType.client) {
-        // Navigator.pushNamed(context, '/home');
-        print('vai pra home page');
-      } else if (userType == UserType.barber) {
-        // Navigator.pushNamed(context, '/dashboard');
-        print('vai pra dashboard page');
+      if (login()) {
+        Navigator.pushReplacementNamed(context, HomePage.route);
       } else {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('E-mail ou senha incorretos')));
       }
     }
+  }
+
+  void logout() {
+    currentClient = null;
+    currentBarber = null;
+    emailController.clear();
+    passwordController.clear();
   }
 
   String? validateEmail(String? value) {
